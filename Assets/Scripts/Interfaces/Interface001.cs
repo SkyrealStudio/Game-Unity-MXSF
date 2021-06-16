@@ -2,19 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TaskType
+using System.Threading.Tasks;
+
+//----------Interface
+
+public interface IBaseTask
 {
-    StringType,
+    Task<bool> Execute();
+    void Execute_P(IBaseTaskAssemble parentExecuter);
 }
 
-public interface IGeneralTask
-{
+
+public interface IBaseTaskAssemble
+{ 
     void Execute();
-    TaskType GetTaskType();
-}
-
-public interface ITextTask : IGeneralTask
-{
-    string GetString();
-    void Restore();
+    int Execute_GetCount();
+    void ReleaseExecutingStatus();
 }

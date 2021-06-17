@@ -7,23 +7,27 @@ using MyNamespace;
 public class LongLifeObjectManager : MonoBehaviour
 {
     public Controller001 currentController;
-    public GameObject MainCharacter;
+    public GameObject MainCharacterGObj;
     public Text outTextUI;
     //public Queue<string> PlotString;
     public GameProperties gameProperties;
+    public TickRecorder tickRecorder;
+    public TextBox textBox;
 
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
 
-        try
-        {
-            DontDestroyOnLoad(MainCharacter);
-            DontDestroyOnLoad(gameProperties.gameObject);
-        }
-        catch (System.Exception e)
-        {
+        //try
+        //{
+        //    DontDestroyOnLoad(MainCharacterGObj);
+        //    DontDestroyOnLoad(gameProperties.gameObject);
+        //    DontDestroyOnLoad(tickRecorder.gameObject);
+        //    DontDestroyOnLoad(textBox.gameObject);
+        //}
+        //catch (System.Exception e)
+        //{
             
-        }
+        //}
     }
 }

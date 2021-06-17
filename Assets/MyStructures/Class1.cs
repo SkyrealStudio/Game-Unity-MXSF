@@ -1,4 +1,8 @@
-﻿namespace Assets.MyStructures
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace Assets.MyStructures
 {
     class MyStruct1<T>
     {
@@ -9,44 +13,91 @@
 
             _count = 0;
 
-            pushPointer = 0;
-            popPointer = 0;
-            dequeuePointer = 0;
+            _pushPointer = 0;
+            _popPointer = -1;
+            _dequeuePointer = 0;
         }
 
-        public void Push()
+        public void Push(T inVal)
         {
-
+            if(_pushPointer == _innerSize)
+            {
+                Expand();
+            }
+            
+            data[_pushPointer] = inVal;
+            
+            _pushPointer++;
+            _popPointer++;
+            _count++;
         }
+
         public T Dequeue()
         {
+            if(_count==0)
+            {
+                throw new System.Exception("yc : Struct Index Out Of Range | Dequeue");
+            }
             
+            _count--;
+            return data[_dequeuePointer++];
         }
 
         public T PopTop()
         {
+            if (_count == 0)
+            {
+                throw new System.Exception("yc : Struct Index Out Of Range | PopTop");
+            }
 
+            _count--;
+            _pushPointer--;
+            return data[_popPointer--];
         }
+
+        public T Peek()
+        {
+            if (_count == 0)
+            {
+                throw new System.Exception("yc : Struct Index Out Of Range | Peek");
+            }
+            return data[_popPointer];
+        }
+
+        public T Tail()
+        {
+            if (_count == 0)
+            {
+                throw new System.Exception("yc : Struct Index Out Of Range | Tail");
+            }
+            return data[_dequeuePointer];
+        }
+
 
         private void Expand()
         {
             T[] transfer = new T[_innerSize*2];
 
-            for(int i=0;i<_count;i++)
+            for(int i=_dequeuePointer,j=0;j<_count;j++,i++)
             {
-                transfer[i] = data[i];
+                transfer[j] = data[i];
             }
             data = transfer;
             _innerSize *= 2;
+
+            _popPointer -= _dequeuePointer;
+            _pushPointer -= _dequeuePointer;
+            _dequeuePointer = 0;
         }
 
         private int _innerSize;
         public int Count { get => _count;  }
-        public T[] data;
         private int _count;
 
-        public int popPointer; //equals to pushPointer
-        private int pushPointer;
-        public int dequeuePointer;
+        public T[] data;
+
+        private int _popPointer;
+        private int _pushPointer;
+        private int _dequeuePointer;
     }
 }

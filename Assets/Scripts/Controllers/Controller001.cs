@@ -71,6 +71,7 @@ namespace MyNamespace
             if (Input.GetKeyDown(KeyCode.J) && _mainCharacterDominantor.taskStack.Count > 0)
             {
                 _mainCharacterDominantor.taskStack.Peek().Execute();
+                Debug.Log("1");
             }
 
             TAG_skipMovements:
@@ -80,19 +81,21 @@ namespace MyNamespace
                 if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Peek().Count > 0)
                 {
                     _mainCharacterDominantor.taskStack.Peek().Execute();
+                    //注意这里会从 this:73 //_mainCharacterDominantor.taskStack.Peek().Execute(2); 跳转执行两次...需要死锁
+                    Debug.Log("2");
                 }
                 else if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Peek().Count == 0)
                 {
                     if (_mainCharacterDominantor.taskStack.Count > 1)
                     {
-                        _mainCharacterDominantor.taskStack.Pop();
-                        _mainCharacterDominantor.taskStack.Peek().Execute();
-                        Debug.Log("1");
+                        _mainCharacterDominantor.taskStack.PopTop();
+                        //_mainCharacterDominantor.taskStack.Peek().Execute();
+                        Debug.Log("PopTop&Execute.");
                     }
                     else
                     {
-                        _mainCharacterDominantor.taskStack.Pop();
-                        Debug.Log("2");
+                        _mainCharacterDominantor.taskStack.PopTop();
+                        Debug.Log("PopTop | Didn't Execute, Current Top Is Empty.");
                     }
                 }
             }

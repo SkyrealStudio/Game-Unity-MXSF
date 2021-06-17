@@ -1,18 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.MyStructures;
+using System.Threading.Tasks;
 
 public class MainCharacterDominantor : MonoBehaviour
 {
     //public Stack<IGeneralTask> generalTaskStack = new Stack<IGeneralTask>();
-    public Stack<MytaskAssemble001> taskStack = new Stack<MytaskAssemble001>();
+    internal MyStruct1<MytaskAssemble001> taskStack = new MyStruct1<MytaskAssemble001>();
     
     public class MytaskAssemble001 : IBaseTaskAssemble
     {
-        public MytaskAssemble001()
+        public MytaskAssemble001(long tickID)
         {
             _data = new Queue<IBaseTask>();
             isExecuting = false;
+
+            this.tickID = tickID;
         }
         
         public void Enqueue(IBaseTask task)
@@ -25,15 +29,39 @@ public class MainCharacterDominantor : MonoBehaviour
             get { return _data.Count; }
         }
 
-        public void Execute()
+        public async void Execute()
         {
             if (isExecuting) return;
-            if (_data.Count == 0) return;
+            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
             else
             {
-                _data.Dequeue().Execute_P(this);
-                isExecuting = true;
+                bool invest = await Execute(1); // includes *.Dequeue();
+                if (_data.Count>0 && invest && _data.Peek().GetType() == new ConnecterTask().GetType())
+                {
+                    ConnecterTask tConnecterTask = (_data.Peek() as ConnecterTask);
+                    _data.Dequeue();//Dump The Connecter;
+                    await Execute(tConnecterTask.ConnectCount);
+                }
             }
+            Debug.Log("All Done");
+        }
+        
+        public async Task<bool> Execute(int reqTaskCount)
+        {
+            if (isExecuting) return false;
+            if (_data.Count < reqTaskCount) throw new System.Exception("Too less Tasks remaining for Execute | Execute(int) : value= "+ reqTaskCount);
+            else
+            {
+                isExecuting = true;
+                for(int i=0;i<reqTaskCount;i++)
+                {
+                    Debug.Log("E:" + i + "Ex_Start");
+                    await _data.Dequeue().Execute_P(this);
+                    Debug.Log("E:" + i + "Ex_End");
+                }
+                return true;
+            }
+            
         }
 
         int IBaseTaskAssemble.Execute_GetCount()
@@ -47,6 +75,9 @@ public class MainCharacterDominantor : MonoBehaviour
             isExecuting = false;
         }
 
+        
+
+        public long tickID;
         private Queue<IBaseTask> _data;
         public bool isExecuting;
     }

@@ -11,80 +11,23 @@ public class CharacterInteracter002 : MonoBehaviour
     
     public MainCharacterDominantor targetDominantor;
     public Camera tarCam;
+
+    private List<long> tickID_list;
     
-    private class MyTask_CameraMove001 : IBaseTask
+    private void Start()
     {
-        public MyTask_CameraMove001(
-            ControllerLocker controllerLocker,
-            Camera tarCam,
-            float camSizeProportion,
-            Vector3 finalCamPosition,
-            int totalSteps,
-            float totalTime,
-            bool releaseLockMode = false)
-        {
-            this.controllerLocker = controllerLocker;
-            this.tarCam = tarCam;
-            this.camSizeProportion = camSizeProportion;
-            this.finalCamPosition = finalCamPosition;
-            this.totalSteps = totalSteps;
-            this.totalTime = totalTime;
-
-            _releaseLockMode = releaseLockMode;
-
-            gapTime_ms = (int)(this.totalTime * 1000 / totalSteps);
-            this.targetCamSize = tarCam.orthographicSize * camSizeProportion;
-        }
-
-        public async Task<bool> Execute()
-        {
-            if (!Application.isPlaying) return false;
-            //防止在游戏退出后更改
-
-            controllerLocker.LockFrom(this);
-
-            for(int counter = 0 ; counter<totalSteps;counter++)
-            {
-                tarCam.orthographicSize = Mathf.Lerp(tarCam.orthographicSize, targetCamSize, 0.5f); 
-                tarCam.transform.position = Vector3.Lerp(tarCam.transform.position, finalCamPosition, 0.5f);
-                await Task.Delay(gapTime_ms);
-            }
-
-            if (_releaseLockMode & (Application.isPlaying))
-            {
-                controllerLocker.UnLockFrom(this);
-            }
-            return true;
-        }
-
-        public async void Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            bool completedFlag =await Execute();
-                if(completedFlag)   parentExecuter.ReleaseExecutingStatus();
-        }
-
-        public Camera tarCam;
-        public float camSizeProportion;
-        public Vector3 finalCamPosition;
-
-        public int totalSteps;
-        public float totalTime;
-
-        private int gapTime_ms;
-        private float targetCamSize;
-
-        private bool _releaseLockMode;
-        public ControllerLocker controllerLocker;
+        tickID_list = new List<long>();
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacter))
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
             //把一个接口实例放入玩家的接口结构中
-            targetDominantor.taskStack.Push(new MainCharacterDominantor.MytaskAssemble001());
-
-            targetDominantor.taskStack.Peek().Enqueue(new MyTask_CameraMove001(
+            tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
+            MainCharacterDominantor.MytaskAssemble001 tAssemble = 
+                new MainCharacterDominantor.MytaskAssemble001(longLifeObjectManager.tickRecorder.tickCount);
+            
+            tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
                 longLifeObjectManager.currentController.locker,
                 tarCam,
                 0.5f,
@@ -93,7 +36,21 @@ public class CharacterInteracter002 : MonoBehaviour
                 1f
             ));
 
-            targetDominantor.taskStack.Peek().Enqueue(new MyTask_CameraMove001(
+            tAssemble.Enqueue(new ConnecterTask(1));
+
+            tAssemble.Enqueue(new MyTasks.TextBoxAdjust_001(
+                longLifeObjectManager.currentController.locker,
+                longLifeObjectManager.textBox,
+                20,
+                0.1f));//Open
+
+            tAssemble.Enqueue(new MyTasks.TextBoxAdjust_002(
+                longLifeObjectManager.currentController.locker,
+                longLifeObjectManager.textBox,
+                20,
+                0.1f));//Close
+
+            tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
                 longLifeObjectManager.currentController.locker,
                 tarCam,
                 1f,
@@ -102,17 +59,26 @@ public class CharacterInteracter002 : MonoBehaviour
                 1f,
                 true
             ));
+            targetDominantor.taskStack.Push(tAssemble);
 
-            Debug.Log("in!");
+            Debug.Log("in: "+gameObject.name);
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacter))
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
-            //targetDominantor.taskStack.Pop();
-            Debug.Log("leave!");
+            try
+            {
+                if (tickID_list.Contains(targetDominantor.taskStack.Tail().tickID))
+                    targetDominantor.taskStack.Dequeue();
+            }
+            catch (System.Exception e)
+            {
+                
+            }
+            Debug.Log("leave: "+gameObject.name);
         }
     }
 }

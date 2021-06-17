@@ -1313,8 +1313,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf6a6dafe035d864793e3b0f322ad702, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text_context: {fileID: 670574348}
-  image_bg: {fileID: 1819382095}
+  textComponent: {fileID: 670574348}
+  imageComponent: {fileID: 1819382095}
 --- !u!1 &1851284336
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,6 +36,8 @@ public class ConnecterTask : IBaseTask
 public interface IBaseTask
 {
     Task<bool> Execute();
+
+    //Execute_(with)ParentExecuterIn, used for adjust its executing status
     Task<bool> Execute_P(IBaseTaskAssemble parentExecuter);
 }
 
@@ -46,4 +48,4 @@ public interface IBaseTaskAssemble
     Task<bool> Execute(int taskCount);
     int Execute_GetCount();
     void ReleaseExecutingStatus();
-}
+} 

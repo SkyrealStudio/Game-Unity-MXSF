@@ -32,10 +32,11 @@ public class CharacterInteracter002 : MonoBehaviour
                 tarCam,
                 0.5f,
                 tarCam.gameObject.transform.position + new Vector3(0f, -1f),
-                20,
-                1f
+                10,
+                0.7f
             ));
 
+            //----------Connecter
             tAssemble.Enqueue(new ConnecterTask(1));
 
             tAssemble.Enqueue(new MyTasks.TextBoxAdjust_001(
@@ -44,19 +45,34 @@ public class CharacterInteracter002 : MonoBehaviour
                 20,
                 0.1f));//Open
 
+            tAssemble.Enqueue(new MyTasks.TextBoxTextWork_000(
+                longLifeObjectManager.textBox
+                ));
+            //----------Connecter
+            tAssemble.Enqueue(new ConnecterTask(1));
+
+            tAssemble.Enqueue(new MyTasks.TextBoxTextWork_001(
+                longLifeObjectManager.textBox,
+                "1234567890123456789012345678901234567890123456789012345678901234567890",
+                40,
+                2f
+                ));
+
             tAssemble.Enqueue(new MyTasks.TextBoxAdjust_002(
                 longLifeObjectManager.currentController.locker,
                 longLifeObjectManager.textBox,
                 20,
                 0.1f));//Close
+            //----------Connecter
+            tAssemble.Enqueue(new ConnecterTask(1));
 
             tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
                 longLifeObjectManager.currentController.locker,
                 tarCam,
                 1f,
                 tarCam.gameObject.transform.position,
-                20,
-                1f,
+                10,
+                0.7f,
                 true
             ));
             targetDominantor.taskStack.Push(tAssemble);

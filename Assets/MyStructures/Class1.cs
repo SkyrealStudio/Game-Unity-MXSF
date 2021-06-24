@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.MyStructures
 {
-    class MyStruct1<T>
+    public class MyStruct1<T>
     {
         public MyStruct1()
         {
@@ -20,13 +20,13 @@ namespace Assets.MyStructures
 
         public void Push(T inVal)
         {
-            if(_pushPointer == _innerSize)
+            if (_pushPointer == _innerSize)
             {
                 Expand();
             }
-            
+
             data[_pushPointer] = inVal;
-            
+
             _pushPointer++;
             _popPointer++;
             _count++;
@@ -34,11 +34,11 @@ namespace Assets.MyStructures
 
         public T Dequeue()
         {
-            if(_count==0)
+            if (_count == 0)
             {
                 throw new System.Exception("yc : Struct Index Out Of Range | Dequeue");
             }
-            
+
             _count--;
             return data[_dequeuePointer++];
         }
@@ -76,9 +76,9 @@ namespace Assets.MyStructures
 
         private void Expand()
         {
-            T[] transfer = new T[_innerSize*2];
+            T[] transfer = new T[_innerSize * 2];
 
-            for(int i=_dequeuePointer,j=0;j<_count;j++,i++)
+            for (int i = _dequeuePointer, j = 0; j < _count; j++, i++)
             {
                 transfer[j] = data[i];
             }
@@ -91,7 +91,7 @@ namespace Assets.MyStructures
         }
 
         private int _innerSize;
-        public int Count { get => _count;  }
+        public int Count { get => _count; }
         private int _count;
 
         public T[] data;
@@ -99,5 +99,7 @@ namespace Assets.MyStructures
         private int _popPointer;
         private int _pushPointer;
         private int _dequeuePointer;
+
+        public int GetStartIndex { get => _dequeuePointer; }
     }
 }

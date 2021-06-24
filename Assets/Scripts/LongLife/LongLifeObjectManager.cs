@@ -13,6 +13,7 @@ public class LongLifeObjectManager : MonoBehaviour
     public GameProperties gameProperties;
     public TickRecorder tickRecorder;
     public TextBox textBox;
+    public TipDominator tipDominator;
 
     private void Awake()
     {

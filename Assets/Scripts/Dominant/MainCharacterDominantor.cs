@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 public class MainCharacterDominantor : MonoBehaviour
 {
     //public Stack<IGeneralTask> generalTaskStack = new Stack<IGeneralTask>();
-    internal MyStruct1<MytaskAssemble001> taskStack = new MyStruct1<MytaskAssemble001>();
+    public MyStruct1<MytaskAssemble001> taskStack = new MyStruct1<MytaskAssemble001>();
     
     public class MytaskAssemble001 : IBaseTaskAssemble
     {
-        public MytaskAssemble001(long tickID)
+        public MyNamespace.ITipBase tipCarrier;
+
+        public MytaskAssemble001(long tickID, MyNamespace.ITipBase tipCarrier)
         {
+            this.tipCarrier = tipCarrier;
             _data = new Queue<IBaseTask>();
             isExecuting = false;
 
@@ -77,9 +80,7 @@ public class MainCharacterDominantor : MonoBehaviour
         {
             isExecuting = false;
         }
-
         
-
         public long tickID;
         private Queue<IBaseTask> _data;
         public bool isExecuting;

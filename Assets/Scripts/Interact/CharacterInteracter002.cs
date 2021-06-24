@@ -11,7 +11,7 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
     
     public MainCharacterDominantor targetDominantor;
     public Camera tarCam;
-    public GameObject tipObject;
+    public TipCarrier001 tipCarrier;
 
     private List<long> tickID_list;
 
@@ -19,13 +19,14 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
 
     public void InteractIsComplete()
     {
+        tipCarrier.gameObject.SetActive(false);
         needFeed = false;
+        longLifeObjectManager.tipDominator.Adjust();
     }
 
     private void Start()
     {
         tickID_list = new List<long>();
-        tipObject.SetActive(true);
         needFeed = true;
     }
 
@@ -36,8 +37,9 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
         {
             tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
             //把一个接口实例放入玩家的接口结构中
-            MainCharacterDominantor.MytaskAssemble001 tAssemble = 
-                new MainCharacterDominantor.MytaskAssemble001(longLifeObjectManager.tickRecorder.tickCount);
+            MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
+                longLifeObjectManager.tickRecorder.tickCount,
+                tipCarrier);
             
             tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
                 longLifeObjectManager.currentController.locker,
@@ -91,28 +93,37 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                 0.7f,
                 true
             ));
+            
             targetDominantor.taskStack.Push(tAssemble);
 
             Debug.Log("in: "+gameObject.name);
+            longLifeObjectManager.tipDominator.Adjust();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj) && needFeed)
         {
             try
             {
                 if (tickID_list.Contains(targetDominantor.taskStack.Tail().tickID))
+                {
                     targetDominantor.taskStack.Dequeue();
+                }
+                else if (tickID_list.Contains(targetDominantor.taskStack.Top().tickID))
+                {
+                    targetDominantor.taskStack.PopTop();
+                }
             }
             catch (System.Exception e)
             {
-                
+                throw new System.Exception("seems this task have been executed");
             }
+
+            longLifeObjectManager.tipDominator.Adjust();
+
             Debug.Log("leave: "+gameObject.name);
         }
     }
-
-    
 }

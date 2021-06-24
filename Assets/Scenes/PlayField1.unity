@@ -209,6 +209,7 @@ GameObject:
   m_Component:
   - component: {fileID: 95365117}
   - component: {fileID: 95365118}
+  - component: {fileID: 95365119}
   m_Layer: 0
   m_Name: Tip
   m_TagString: Untagged
@@ -249,7 +250,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4e991a371e3cb2d439389245eaf81aa2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -270,7 +271,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e449132f49edbd540925c74678067620, type: 3}
+  m_Sprite: {fileID: -2794283014979204370, guid: 03bc6f58c58f8244d90a05dcb4e0ae17, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -281,6 +282,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &95365119
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 95365116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2051f479030844341b0117f23d60672b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &160557990
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,6 +414,7 @@ GameObject:
   - component: {fileID: 176087319}
   - component: {fileID: 176087318}
   - component: {fileID: 176087320}
+  - component: {fileID: 176087321}
   m_Layer: 0
   m_Name: LongLife
   m_TagString: Untagged
@@ -426,6 +440,7 @@ MonoBehaviour:
   gameProperties: {fileID: 0}
   tickRecorder: {fileID: 176087320}
   textBox: {fileID: 1819382097}
+  tipDominator: {fileID: 176087321}
 --- !u!4 &176087319
 Transform:
   m_ObjectHideFlags: 0
@@ -452,6 +467,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bbbfdb0f78a0a841946da20fbf692a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &176087321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176087317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8507fbe7911d55b4cb324734278b37bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCharacterDominantor: {fileID: 787027196}
+  spriteRenderers: []
 --- !u!1 &181413364
 GameObject:
   m_ObjectHideFlags: 0
@@ -1038,7 +1067,7 @@ MonoBehaviour:
   longLifeObjectManager: {fileID: 176087318}
   targetDominantor: {fileID: 787027196}
   tarCam: {fileID: 1738501937}
-  tipObject: {fileID: 95365116}
+  tipCarrier: {fileID: 95365119}
   needFeed: 0
 --- !u!50 &1293955604
 Rigidbody2D:
@@ -1635,7 +1664,7 @@ MonoBehaviour:
   longLifeObjectManager: {fileID: 176087318}
   targetDominantor: {fileID: 787027196}
   tarCam: {fileID: 1738501937}
-  tipObject: {fileID: 1915501652}
+  tipCarrier: {fileID: 1915501655}
   needFeed: 0
 --- !u!50 &1851284338
 Rigidbody2D:
@@ -1736,6 +1765,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1915501653}
   - component: {fileID: 1915501654}
+  - component: {fileID: 1915501655}
   m_Layer: 0
   m_Name: Tip
   m_TagString: Untagged
@@ -1776,7 +1806,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4e991a371e3cb2d439389245eaf81aa2, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1797,7 +1827,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e449132f49edbd540925c74678067620, type: 3}
+  m_Sprite: {fileID: -2794283014979204370, guid: 03bc6f58c58f8244d90a05dcb4e0ae17, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1808,6 +1838,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1915501655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1915501652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2051f479030844341b0117f23d60672b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2055795059
 GameObject:
   m_ObjectHideFlags: 0

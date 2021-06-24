@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEditor;
+﻿using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 
 using MyNamespace;
 
@@ -21,7 +15,14 @@ public class MyTasksAbstract
         }
 
         public abstract Task<bool> Execute();
-        public abstract Task<bool> Execute_P(IBaseTaskAssemble parentExecuter);
+
+        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        {
+            if (!Application.isPlaying) return false;
+            bool completedFlag = await Execute();
+            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
+            return true;
+        }
 
         public int totalSteps;
         public float totalTime;
@@ -74,13 +75,13 @@ public class MyTasks
             return true;
         }
 
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            if (!Application.isPlaying) return false;
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
+        //public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        //{
+        //    if (!Application.isPlaying) return false;
+        //    bool completedFlag = await Execute();
+        //    if (completedFlag) parentExecuter.ReleaseExecutingStatus();
+        //    return true;
+        //}
 
         public Camera tarCam;
         public float camSizeProportion;
@@ -131,13 +132,13 @@ public class MyTasks
             return true;
         }
 
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            if (!Application.isPlaying) return false;
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
+        //public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        //{
+        //    if (!Application.isPlaying) return false;
+        //    bool completedFlag = await Execute();
+        //    if (completedFlag) parentExecuter.ReleaseExecutingStatus();
+        //    return true;
+        //}
 
         public TextBox tarTextBox;
 
@@ -187,13 +188,13 @@ public class MyTasks
             return true;
         }
 
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            if (!Application.isPlaying) return false;
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
+        //public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        //{
+        //    if (!Application.isPlaying) return false;
+        //    bool completedFlag = await Execute();
+        //    if (completedFlag) parentExecuter.ReleaseExecutingStatus();
+        //    return true;
+        //}
 
         public TextBox tarTextBox;
 
@@ -230,9 +231,11 @@ public class MyTasks
             TextBox targetTextBox,
             string content,
             int totalSteps,
-            float totalTime
+            float totalTime,
+            bool clearStatus = false
             ) : base(totalSteps,totalTime)
         {
+            this.clearStatus = clearStatus;
             this.targetTextBox = targetTextBox;
             this.content = content;
             _gapCount_textContent = (float)this.content.Length / (float)totalSteps;
@@ -243,11 +246,18 @@ public class MyTasks
         public override async Task<bool> Execute()
         {
             if (!Application.isPlaying) return false;
+
+            if (clearStatus) targetTextBox.textComponent.text = "";
             for (int counter = 0;counter<totalSteps && Application.isPlaying; counter++)
             {
                 _currentCount_textContent += _gapCount_textContent;
-                for(;_currentCount_Int_textContent<_currentCount_textContent;_currentCount_Int_textContent++)
-                    targetTextBox.textComponent.text += content[_currentCount_Int_textContent];
+                for(;_currentCount_Int_textContent<(int)_currentCount_textContent;_currentCount_Int_textContent++)
+                {
+                    if (_currentCount_Int_textContent < (content.Length - 1))
+                        targetTextBox.textComponent.text += content[_currentCount_Int_textContent];/**/
+                    else
+                        break;
+                }
                 
                 await Task.Delay(gapTime_ms);
             }
@@ -256,7 +266,36 @@ public class MyTasks
             return true;
         }
 
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        //public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        //{
+        //    if (!Application.isPlaying) return false;
+        //    bool completedFlag = await Execute();
+        //    if (completedFlag) parentExecuter.ReleaseExecutingStatus();
+        //    return true;
+        //}
+
+        private float _currentCount_textContent;
+        private int _currentCount_Int_textContent;
+        private float _gapCount_textContent;
+        public bool clearStatus;
+        public string content;
+        public TextBox targetTextBox;
+    }
+    
+    public class Acknowledge_TaskIsComplete : IBaseTask
+    {
+        public Acknowledge_TaskIsComplete(IInteractBase _interacter)
+        {
+            this._interacter = _interacter;
+        }
+        public async Task<bool> Execute()
+        {
+            if (!Application.isPlaying) return false;
+            _interacter.InteractIsComplete();
+            return true;
+        }
+
+        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
         {
             if (!Application.isPlaying) return false;
             bool completedFlag = await Execute();
@@ -264,10 +303,6 @@ public class MyTasks
             return true;
         }
 
-        private float _currentCount_textContent;
-        private int _currentCount_Int_textContent;
-        private float _gapCount_textContent;
-        public string content;
-        public TextBox targetTextBox;
+        private IInteractBase _interacter;
     }
 }

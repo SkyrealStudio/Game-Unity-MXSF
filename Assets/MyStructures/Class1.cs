@@ -55,11 +55,11 @@ namespace Assets.MyStructures
             return data[_popPointer--];
         }
 
-        public T Peek()
+        public T Top()
         {
             if (_count == 0)
             {
-                throw new System.Exception("yc : Struct Index Out Of Range | Peek");
+                throw new System.Exception("yc : Struct Index Out Of Range | Top");
             }
             return data[_popPointer];
         }

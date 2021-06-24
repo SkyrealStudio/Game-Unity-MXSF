@@ -56,52 +56,43 @@ namespace MyNamespace
 
         void Update()
         {
-            if (locker.Value) goto TAG_skipMovements;
-            
-            if (_onGround && Input.GetKeyDown(KeyCode.W))
-                character_rigidbody2D.AddForce(new Vector2(0f, force));
-            if (Input.GetKey(KeyCode.A))
-                character.gameObject.transform.Translate(new Vector2(-speed, 0f));
-
-            if (Input.GetKey(KeyCode.S))
-                {}//
-
-            if(Input.GetKey(KeyCode.D))
-                character.gameObject.transform.Translate(new Vector2(speed, 0f));
-            if (Input.GetKeyDown(KeyCode.J) && _mainCharacterDominantor.taskStack.Count > 0)
+            if (!locker.Value)
             {
-                _mainCharacterDominantor.taskStack.Peek().Execute();
-                Debug.Log("1");
-            }
+                if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Top().Count == 0)
+                    _mainCharacterDominantor.taskStack.PopTop();
 
-            TAG_skipMovements:
+                if (_onGround && Input.GetKeyDown(KeyCode.W))
+                    character_rigidbody2D.AddForce(new Vector2(0f, force));
+                if (Input.GetKey(KeyCode.A))
+                    character.gameObject.transform.Translate(new Vector2(-speed, 0f));
 
-            if (Input.GetKeyDown(KeyCode.J) )
-            {
-                if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Peek().Count > 0)
+                if (Input.GetKey(KeyCode.S))
+                { }//
+
+                if (Input.GetKey(KeyCode.D))
+                    character.gameObject.transform.Translate(new Vector2(speed, 0f));
+                if (Input.GetKeyDown(KeyCode.J) && _mainCharacterDominantor.taskStack.Count > 0)
                 {
-                    _mainCharacterDominantor.taskStack.Peek().Execute();
-                    //注意这里会从 this:73 //_mainCharacterDominantor.taskStack.Peek().Execute(2); 跳转执行两次...需要死锁
-                    Debug.Log("2");
-                }
-                else if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Peek().Count == 0)
-                {
-                    if (_mainCharacterDominantor.taskStack.Count > 1)
-                    {
-                        _mainCharacterDominantor.taskStack.PopTop();
-                        //_mainCharacterDominantor.taskStack.Peek().Execute();
-                        Debug.Log("PopTop&Execute.");
-                    }
-                    else
-                    {
-                        _mainCharacterDominantor.taskStack.PopTop();
-                        Debug.Log("PopTop | Didn't Execute, Current Top Is Empty.");
-                    }
+                    Debug.Log("1");
+                    _mainCharacterDominantor.taskStack.Top().Execute();
                 }
             }
 
-
-            TAG_skipUpdate: ;
+            else// locker.Value == true;
+            {
+                if (Input.GetKeyDown(KeyCode.J) && _mainCharacterDominantor.taskStack.Top().isExecuting == false)
+                {
+                    if (_mainCharacterDominantor.taskStack.Count > 0 && _mainCharacterDominantor.taskStack.Top().Count > 0)
+                    {
+                        Debug.Log("2");
+                        _mainCharacterDominantor.taskStack.Top().Execute();
+                    }
+                    else 
+                    {
+                        throw new System.Exception("This ChildQueue is Empty but latest task didn't give back the locker.Value | Input.GetKeyDown(KeyCode.J)");
+                    }
+                }
+            }
         }
 
         private void OnCollisionEnter2D(Collision2D collision)

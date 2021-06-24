@@ -52,11 +52,14 @@ public class MainCharacterDominantor : MonoBehaviour
             if (_data.Count < reqTaskCount) throw new System.Exception("Too less Tasks remaining for Execute | Execute(int) : value= "+ reqTaskCount);
             else
             {
-                isExecuting = true;
                 for(int i=0;i<reqTaskCount;i++)
                 {
+                    isExecuting = true;
                     Debug.Log("E:" + i + "Ex_Start");
+                    if (_data.Peek().GetType() == new ConnecterTask().GetType())
+                        throw new System.Exception("Wrong connecterTask's position");
                     await _data.Dequeue().Execute_P(this);
+                    //if Execute_P() Completed, will switch (isExecuting) flag to (false)
                     Debug.Log("E:" + i + "Ex_End");
                 }
                 return true;

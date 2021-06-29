@@ -7,7 +7,7 @@ using Assets.MyStructures;
 public class TipDominator : MonoBehaviour
 {
     public MainCharacterDominantor mainCharacterDominantor;
-
+    [HideInInspector]
     public List<SpriteRenderer> spriteRenderers = new List<SpriteRenderer>();
 
     public void Adjust()
@@ -18,18 +18,18 @@ public class TipDominator : MonoBehaviour
         }
 
         spriteRenderers = new List<SpriteRenderer>();
-        for (int i = mainCharacterDominantor.taskStack.GetStartIndex; i < mainCharacterDominantor.taskStack.Count + mainCharacterDominantor.taskStack.GetStartIndex; i++)
+        for (int i = 0; i < mainCharacterDominantor.taskStack.Count; i++)
         {
-            spriteRenderers.Add(mainCharacterDominantor.taskStack.data[i].tipCarrier.GetRenderer());
+            spriteRenderers.Add(mainCharacterDominantor.taskStack[i].tipCarrier.GetRenderer());
         }
 
         if(mainCharacterDominantor.taskStack.Count!=0)
         {
-            for (int i = mainCharacterDominantor.taskStack.GetStartIndex + mainCharacterDominantor.taskStack.Count - 1; i >= mainCharacterDominantor.taskStack.GetStartIndex; i--)
+            for (int i = mainCharacterDominantor.taskStack.Count-1; i >=0 ; i--)//inspect from the Top
             {
-                if (mainCharacterDominantor.taskStack.data[i].tipCarrier.GetRenderer().gameObject.activeSelf)
+                if (mainCharacterDominantor.taskStack[i].tipCarrier.GetRenderer().gameObject.activeSelf)
                 {
-                    mainCharacterDominantor.taskStack.data[i].tipCarrier.GetRenderer().color = Color.yellow;
+                    mainCharacterDominantor.taskStack[i].tipCarrier.GetRenderer().color = Color.yellow;
                     break;
                 }
                 else
@@ -39,9 +39,5 @@ public class TipDominator : MonoBehaviour
             }
             
         }
-            //if(mainCharacterDominantor.taskStack.Top().tipCarrier.GetRenderer().gameObject.activeSelf)
-            //    mainCharacterDominantor.taskStack.Top().tipCarrier.GetRenderer().color = Color.yellow;
-            //else
-            //    mainCharacterDominantor.taskStack.Top().tipCarrier.GetRenderer().color = Color.white;
     }
 }

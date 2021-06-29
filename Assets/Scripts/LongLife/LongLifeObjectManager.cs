@@ -15,20 +15,10 @@ public class LongLifeObjectManager : MonoBehaviour
     public TextBox textBox;
     public TipDominator tipDominator;
 
+    public TipTextBoxBranch tipTextBoxBranch;
+
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
-
-        //try
-        //{
-        //    DontDestroyOnLoad(MainCharacterGObj);
-        //    DontDestroyOnLoad(gameProperties.gameObject);
-        //    DontDestroyOnLoad(tickRecorder.gameObject);
-        //    DontDestroyOnLoad(textBox.gameObject);
-        //}
-        //catch (System.Exception e)
-        //{
-            
-        //}
     }
 }

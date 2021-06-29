@@ -41,61 +41,84 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                 longLifeObjectManager.tickRecorder.tickCount,
                 tipCarrier);
             
-            tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
-                longLifeObjectManager.currentController.locker,
-                tarCam,
-                0.5f,
-                tarCam.gameObject.transform.position + new Vector3(0f, -1f),
-                10,
-                0.7f
-            ));
-            
-            tAssemble.Enqueue(new ConnecterTask(2));
-            
-            tAssemble.Enqueue(new MyTasks.TextBoxAdjust_001(
-                longLifeObjectManager.currentController.locker,
-                longLifeObjectManager.textBox,
-                20,
-                0.1f));//Open
+            tAssemble.Enqueue(new MyTasks.TextBoxGroupTask(
+                new IBaseTask[] {
+                    new MyTasks.CameraMove_Zoom_001(
+                        longLifeObjectManager.currentController.locker,
+                        tarCam,
+                        0.5f,
+                        tarCam.gameObject.transform.position + new Vector3(0f, -1f),
+                        10,
+                        0.7f),
 
-            tAssemble.Enqueue(new MyTasks.TextBoxTextWork_001(
-                longLifeObjectManager.textBox,
-                "123456789012345678901234567890123456789012345678901234567890123456789-",
-                40,
-                0.2f,
-                true
+                    new MyTasks.TextBoxAdjust_001(
+                        longLifeObjectManager.currentController.locker,
+                        longLifeObjectManager.textBox,
+                        20,
+                        0.1f),
+
+                    new MyTasks.TextBoxTextWork_001(
+                        longLifeObjectManager.textBox,
+                        "114514!!114514!!114514!!114514!!114514!!",
+                        40,
+                        0.2f,
+                        true)
+                })
+            );
+
+            tAssemble.Enqueue(
+                new MyTasks.TextBoxBranchAdjust_001(
+                    longLifeObjectManager.currentController.locker,
+                    longLifeObjectManager.textBox,
+                    2,
+                    new string[2] { "中文","English"/*, "русский"*/ },
+                    20,
+                    0.5f
+                    )
+                );
+
+            tAssemble.Enqueue(
+                new MyTasks.TextBoxVariableTask001(
+                    new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
+                    new IBaseTask[2] 
+                    {
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"这是第一个选项",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true)
+                        //new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true)
+                    }
                 ));
 
-            tAssemble.Enqueue(new MyTasks.TextBoxTextWork_001(
-                longLifeObjectManager.textBox,
-                "12345678901234",
-                40,
-                0.2f,
-                true
+            tAssemble.Enqueue(
+                new MyTasks.TextBoxBranchAdjust_001(
+                    longLifeObjectManager.currentController.locker,
+                    longLifeObjectManager.textBox,
+                    3,
+                    new string[3] { "中文", "English", "русский" },
+                    20,
+                    0.5f
+                    )
+                );
+
+            tAssemble.Enqueue(
+                new MyTasks.TextBoxVariableTask001(
+                    new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
+                    new IBaseTask[3] 
+                    {
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"这是第一个选项",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true)
+                    }
                 ));
-
-            tAssemble.Enqueue(new MyTasks.Acknowledge_TaskIsComplete(this));
             
-            tAssemble.Enqueue(new ConnecterTask(2));
-
-            tAssemble.Enqueue(new MyTasks.TextBoxAdjust_002(
-                longLifeObjectManager.currentController.locker,
-                longLifeObjectManager.textBox,
-                20,
-                0.1f));//Close
-
-            tAssemble.Enqueue(new MyTasks.CameraMove_Zoom_001(
-                longLifeObjectManager.currentController.locker,
-                tarCam,
-                1f,
-                tarCam.gameObject.transform.position,
-                10,
-                0.7f,
-                true
-            ));
+            tAssemble.Enqueue(new MyTasks.TextBoxGroupTask(
+                new IBaseTask[3] {
+                    new MyTasks.Acknowledge_TaskIsComplete(this),
+                    new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker,longLifeObjectManager.textBox,20,0.1f),
+                    new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker,tarCam,1f,tarCam.gameObject.transform.position,10,0.7f,true)
+                }
+                ));
             
             targetDominantor.taskStack.Push(tAssemble);
-
             Debug.Log("in: "+gameObject.name);
             longLifeObjectManager.tipDominator.Adjust();
         }

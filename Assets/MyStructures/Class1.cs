@@ -8,7 +8,7 @@ namespace Assets.MyStructures
     {
         public MyStruct1()
         {
-            data = new T[10];
+            _data = new T[10];
             _innerSize = 10;
 
             _count = 0;
@@ -18,6 +18,24 @@ namespace Assets.MyStructures
             _dequeuePointer = 0;
         }
 
+        public T this[int index]
+        {
+            get
+            {
+                if (index >= 0 && index < _count)
+                    return _data[_dequeuePointer + index];
+                else
+                    throw new System.Exception("Index Out Of Range | MyStruct1 | get");
+            }
+            set
+            {
+                if (index >= 0 && index < _count)
+                    _data[_dequeuePointer + index] = value;
+                else
+                    throw new System.Exception("Index Out Of Range | MyStruct1 | set");
+            }
+        }
+
         public void Push(T inVal)
         {
             if (_pushPointer == _innerSize)
@@ -25,7 +43,7 @@ namespace Assets.MyStructures
                 Expand();
             }
 
-            data[_pushPointer] = inVal;
+            _data[_pushPointer] = inVal;
 
             _pushPointer++;
             _popPointer++;
@@ -40,7 +58,7 @@ namespace Assets.MyStructures
             }
 
             _count--;
-            return data[_dequeuePointer++];
+            return _data[_dequeuePointer++];
         }
 
         public T PopTop()
@@ -52,7 +70,7 @@ namespace Assets.MyStructures
 
             _count--;
             _pushPointer--;
-            return data[_popPointer--];
+            return _data[_popPointer--];
         }
 
         public T Top()
@@ -61,7 +79,7 @@ namespace Assets.MyStructures
             {
                 throw new System.Exception("yc : Struct Index Out Of Range | Top");
             }
-            return data[_popPointer];
+            return _data[_popPointer];
         }
 
         public T Tail()
@@ -70,7 +88,7 @@ namespace Assets.MyStructures
             {
                 throw new System.Exception("yc : Struct Index Out Of Range | Tail");
             }
-            return data[_dequeuePointer];
+            return _data[_dequeuePointer];
         }
 
 
@@ -80,9 +98,9 @@ namespace Assets.MyStructures
 
             for (int i = _dequeuePointer, j = 0; j < _count; j++, i++)
             {
-                transfer[j] = data[i];
+                transfer[j] = _data[i];
             }
-            data = transfer;
+            _data = transfer;
             _innerSize *= 2;
 
             _popPointer -= _dequeuePointer;
@@ -90,11 +108,14 @@ namespace Assets.MyStructures
             _dequeuePointer = 0;
         }
 
+        
         private int _innerSize;
         public int Count { get => _count; }
         private int _count;
 
-        public T[] data;
+        public T[] _data;
+
+        
 
         private int _popPointer;
         private int _pushPointer;

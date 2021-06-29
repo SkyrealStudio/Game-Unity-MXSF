@@ -38,36 +38,23 @@ public class MainCharacterDominantor : MonoBehaviour
             if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
             else
             {
-                bool invest = await Execute(1); // includes *.Dequeue();
-                if (_data.Count>0 && invest && _data.Peek().GetType() == new ConnecterTask().GetType())
-                {
-                    ConnecterTask tConnecterTask = (_data.Peek() as ConnecterTask);
-                    _data.Dequeue();//Dump The Connecter;
-                    await Execute(tConnecterTask.ConnectCount);
-                }
+                isExecuting = true;
+                await _data.Dequeue().Execute_P(this);
             }
             Debug.Log("All Done");
         }
         
-        public async Task<bool> Execute(int reqTaskCount)
+        public async void ExecuteVariableTask_Path001(int para)
         {
-            if (isExecuting) return false;
-            if (_data.Count < reqTaskCount) throw new System.Exception("Too less Tasks remaining for Execute | Execute(int) : value= "+ reqTaskCount);
+            if (isExecuting) return;
+            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
             else
             {
-                for(int i=0;i<reqTaskCount;i++)
-                {
-                    isExecuting = true;
-                    Debug.Log("E:" + i + "Ex_Start");
-                    if (_data.Peek().GetType() == new ConnecterTask().GetType())
-                        throw new System.Exception("Wrong connecterTask's position");
-                    await _data.Dequeue().Execute_P(this);
-                    //if Execute_P() Completed, will switch (isExecuting) flag to (false)
-                    Debug.Log("E:" + i + "Ex_End");
-                }
-                return true;
+                isExecuting = true;
+                IVariableTask current = _data.Dequeue() as IVariableTask;
+                current.Select(para);
+                await current.Execute_P(this);
             }
-            
         }
 
         int IBaseTaskAssemble.Execute_GetCount()

@@ -55,14 +55,7 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                         longLifeObjectManager.currentController.locker,
                         longLifeObjectManager.textBox,
                         20,
-                        0.1f),
-
-                    new MyTasks.TextBoxTextWork_001(
-                        longLifeObjectManager.textBox,
-                        "114514!!114514!!114514!!114514!!114514!!",
-                        40,
-                        0.2f,
-                        true)
+                        0.1f)
                 })
             );
 
@@ -70,8 +63,8 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                 new MyTasks.TextBoxBranchAdjust_001(
                     longLifeObjectManager.currentController.locker,
                     longLifeObjectManager.textBox,
-                    2,
-                    new string[2] { "中文","English"/*, "русский"*/ },
+                    3,
+                    new string[3] { "中文","English", "русский" },
                     20,
                     0.5f
                     )
@@ -80,11 +73,11 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
             tAssemble.Enqueue(
                 new MyTasks.TextBoxVariableTask001(
                     new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
-                    new IBaseTask[2] 
+                    new IBaseTask[3] 
                     {
                         new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"这是第一个选项",40,0.2f,true),
-                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true)
-                        //new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true)
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true)
                     }
                 ));
 

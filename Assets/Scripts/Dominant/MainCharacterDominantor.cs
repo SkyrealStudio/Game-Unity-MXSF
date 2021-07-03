@@ -47,7 +47,7 @@ public class MainCharacterDominantor : MonoBehaviour
         public async void ExecuteVariableTask_Path001(int para)
         {
             if (isExecuting) return;
-            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
+            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | ExecuteVariableTask_Path001(void)");
             else
             {
                 isExecuting = true;

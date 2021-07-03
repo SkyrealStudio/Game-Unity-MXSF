@@ -1,7 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 using MyNamespace;
+using System.Collections.Generic;
 
 public class MyTasksAbstract
 {
@@ -46,7 +49,7 @@ public class MyTasksAbstract
         {
             if (n < 0 || n >= _preSelectTasks.Length) throw new System.Exception("index Out Of Range | Select()");
             _nowTaskPointer = n;
-            return _preSelectTasks[n];
+            return _preSelectTasks[_nowTaskPointer];
         }
 
         public abstract Task<bool> Execute();
@@ -307,24 +310,42 @@ public class MyTasks
             ControllerLocker controllerLocker,
             TextBox tarTextBox,
             int branchCount,
-            string[] strShow,
+            string[] _strShow,
+            string[] _anti_strShow,
+            ChooseForm _targetChooseForm,
             int totalSteps,
             float totalTime
             ) : base(totalSteps, totalTime)
         {
-            if (branchCount != strShow.Length) throw new System.Exception("branchCount and strShow.Length does not match");
-
             this.controllerLocker = controllerLocker;
             this.tarTextBox = tarTextBox;
             this.branchCount = branchCount;
 
-            for (int i = 0; i < branchCount; i++)
-                tarTextBox.textComponents_Branch[i].text = strShow[i];
+            if (branchCount != _strShow.Length)
+                throw new System.Exception("branchCount and strShow.Length does not match");
+
+            this._strShow = _strShow;
+            this._anti_strShow = _anti_strShow;
+            this._targetChooseForm = _targetChooseForm;
         }
 
         public override async Task<bool> Execute()
         {
             if (!Application.isPlaying) return false;
+
+            if(_anti_strShow.Length != 0)
+            {
+                for(int i=0;i<_anti_strShow.Length;i++)
+                    if(_targetChooseForm.Includes(_anti_strShow[i]))
+                    {
+                        branchCount--;
+                        _strShow[i] = "";
+                    }
+            }
+
+            for (int i = 0; i < branchCount; i++)
+                tarTextBox.textComponents_Branch[i].text = _strShow[i];
+            
 
             controllerLocker.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyNum,branchCount-1);
 
@@ -354,10 +375,13 @@ public class MyTasks
         }
 
         private ControllerLocker controllerLocker;
+        private string[] _strShow;
+        private string[] _anti_strShow;
+        private ChooseForm _targetChooseForm;
         public TextBox tarTextBox;
         public int branchCount;
     }
-
+    
     public class TextBoxBranchAdjust_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask // start The TextBox's Branch
     {
         public TextBoxBranchAdjust_002(
@@ -438,12 +462,60 @@ public class MyTasks
         private IBaseTask _closeAnimeTask;
     }
 
-    public class TextBoxGroupTask : MyTasksAbstract.GroupTask
+    public class TextBoxGroupTask : MyTasksAbstract.GroupTask,IBaseTask
     {
         public TextBoxGroupTask(IBaseTask[] tasks) : base(tasks)
         {
             
         }
+    }
+
+    public class ChoiceMarkerTask : IBaseTask
+    {
+        ChoiceMarkerTask(ChooseForm _tarChooseForm,string _choiceNote)
+        {
+            this._choiceNote = _choiceNote;
+            this._tarChooseForm = _tarChooseForm;
+        }
+        public async Task<bool> Execute()
+        {
+            _tarChooseForm.Choose(_choiceNote);
+            return true;
+        }
+
+        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        {
+            await Execute();
+            return true;
+        }
+
+        private string _choiceNote;
+        private ChooseForm _tarChooseForm;
+    }
+
+    //Constructing!!!
+    public class CuterTask : IBaseTask
+    {
+        public CuterTask(Queue<IBaseTask> targetQueue, Queue<IBaseTask> adjustDataQueue)
+        {
+
+        }
+
+        public async Task<bool> Execute()
+        {
+            
+            return true;
+        }
+
+        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        {
+            await Execute();
+            parentExecuter.ReleaseExecutingStatus();
+            return true;
+        }
+
+        private Queue<IBaseTask> _targetQueue;
+        private Queue<IBaseTask> _adjustDataQueue;
     }
 
     public class Acknowledge_TaskIsComplete : IBaseTask

@@ -12,7 +12,7 @@ public class TextBox : MonoBehaviour
     public Text[] textComponents_Branch;
 
     public int activatedBranchesCount = 0;
-
+    
     public void ClearText_Main()
     {
         textComponent_Main.text = "";

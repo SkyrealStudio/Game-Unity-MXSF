@@ -116,6 +116,7 @@ namespace MyNamespace
                     {
                         if(!_mainCharacterDominantor.taskStack.Top().isExecuting)
                             longLifeObjectManager.tipTextBoxBranch.LightUP(0);/**/
+                        //_mainCharacterDominantor.taskStack.Top().
                         _mainCharacterDominantor.taskStack.Top().ExecuteVariableTask_Path001(0);
                         Debug.Log("Ex0");
                     }

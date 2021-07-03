@@ -65,6 +65,8 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                     longLifeObjectManager.textBox,
                     3,
                     new string[3] { "中文","English", "русский" },
+                    new string[0],
+                    longLifeObjectManager.chooseForm,
                     20,
                     0.5f
                     )
@@ -87,6 +89,8 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                     longLifeObjectManager.textBox,
                     3,
                     new string[3] { "中文", "English", "русский" },
+                    new string[0],
+                    longLifeObjectManager.chooseForm,
                     20,
                     0.5f
                     )

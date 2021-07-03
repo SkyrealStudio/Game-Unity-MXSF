@@ -49,7 +49,8 @@ public class MyTasksAbstract
         {
             if (n < 0 || n >= _preSelectTasks.Length) throw new System.Exception("index Out Of Range | Select()");
             _nowTaskPointer = n;
-            return _preSelectTasks[_nowTaskPointer];
+            //return _preSelectTasks[_nowTaskPointer];
+            return this;
         }
 
         public abstract Task<bool> Execute();
@@ -335,12 +336,7 @@ public class MyTasks
 
             if(_anti_strShow.Length != 0)
             {
-                for(int i=0;i<_anti_strShow.Length;i++)
-                    if(_targetChooseForm.Includes(_anti_strShow[i]))
-                    {
-                        branchCount--;
-                        _strShow[i] = "";
-                    }
+                
             }
 
             for (int i = 0; i < branchCount; i++)

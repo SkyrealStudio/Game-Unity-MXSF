@@ -52,8 +52,9 @@ public class MainCharacterDominantor : MonoBehaviour
             {
                 isExecuting = true;
                 IVariableTask current = _data.Dequeue() as IVariableTask;
-                current.Select(para);
-                await current.Execute_P(this);
+                await current.Select(para).Execute_P(this);
+                //current.Select(para);
+                //await current.Execute_P(this);
             }
         }
 

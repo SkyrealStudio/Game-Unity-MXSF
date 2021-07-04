@@ -1163,6 +1163,7 @@ GameObject:
   - component: {fileID: 1851284339}
   - component: {fileID: 1851284338}
   - component: {fileID: 1851284337}
+  - component: {fileID: 1851284341}
   m_Layer: 7
   m_Name: C002_OldMan
   m_TagString: Untagged
@@ -1186,6 +1187,7 @@ MonoBehaviour:
   targetDominantor: {fileID: 787027196}
   tarCam: {fileID: 1738501937}
   tipCarrier: {fileID: 1915501655}
+  choiceFormCarrier: {fileID: 1851284341}
   needFeed: 0
 --- !u!50 &1851284338
 Rigidbody2D:
@@ -1276,6 +1278,18 @@ Transform:
   m_Father: {fileID: 1702288679}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1851284341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851284336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 224e9848323a7cb42bb7a771f53a1446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1915501652
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 using MyNamespace;
 using System.Collections.Generic;
@@ -88,6 +90,9 @@ public class MyTasksAbstract
 
 public class MyTasks
 {
+    public delegate bool[] JudgeAction();
+    public delegate bool[] JudgeAction<T0>(T0 arg0);
+
     public class CameraMove_Zoom_001 : MyTasksAbstract.TimeAsyncTask,IBaseTask // zoom and move the camera
     {
         public CameraMove_Zoom_001(
@@ -305,42 +310,40 @@ public class MyTasks
         public TextBox targetTextBox;
     }
     
-    public class TextBoxBranchAdjust_001 : MyTasksAbstract.TimeAsyncTask, IBaseTask // start The TextBox's Branch
+    public class TextBoxBranchAdjust_001 : MyTasksAbstract.TimeAsyncTask, IBaseTask // show The TextBox's Branch
     {
         public TextBoxBranchAdjust_001(
             ControllerLocker controllerLocker,
             TextBox tarTextBox,
-            int branchCount,
             string[] _strShow,
-            string[] _anti_strShow,
-            ChooseForm _targetChooseForm,
             int totalSteps,
-            float totalTime
+            float totalTime,
+            JudgeAction judgeAction
             ) : base(totalSteps, totalTime)
         {
             this.controllerLocker = controllerLocker;
             this.tarTextBox = tarTextBox;
-            this.branchCount = branchCount;
-
-            if (branchCount != _strShow.Length)
-                throw new System.Exception("branchCount and strShow.Length does not match");
-
             this._strShow = _strShow;
-            this._anti_strShow = _anti_strShow;
-            this._targetChooseForm = _targetChooseForm;
+
+            this.judgeAction = judgeAction;
+            
+            if (judgeAction.Invoke().Length != _strShow.Length)
+                throw new System.Exception("judgeResult's Length does not match _strShow.Length | TextBoxBranchAdjust_001(...)");
+            this.branchCount = _strShow.Length;
+
         }
 
         public override async Task<bool> Execute()
         {
             if (!Application.isPlaying) return false;
 
-            if(_anti_strShow.Length != 0)
-            {
+            bool[] _judgeResult = judgeAction.Invoke();
+            for (int i = 0; i < _judgeResult.Length; i++)
+                if (_judgeResult[i])
+                    tarTextBox.branchOperation.AddBranch(_strShow[i]);
+                else
+                    branchCount--;
                 
-            }
-
-            for (int i = 0; i < branchCount; i++)
-                tarTextBox.textComponents_Branch[i].text = _strShow[i];
             
 
             controllerLocker.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyNum,branchCount-1);
@@ -364,21 +367,18 @@ public class MyTasks
                 await Task.Delay(gapTime_ms);
                 //Debug.Log(counter);
             }
-
-            tarTextBox.activatedBranchesCount = branchCount;
-             
+            
             return true;
         }
 
         private ControllerLocker controllerLocker;
         private string[] _strShow;
-        private string[] _anti_strShow;
-        private ChooseForm _targetChooseForm;
+        private JudgeAction judgeAction;
         public TextBox tarTextBox;
         public int branchCount;
     }
     
-    public class TextBoxBranchAdjust_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask // start The TextBox's Branch
+    public class TextBoxBranchAdjust_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask // hide The TextBox's Branch
     {
         public TextBoxBranchAdjust_002(
             ControllerLocker controllerLocker,
@@ -413,8 +413,8 @@ public class MyTasks
                 tarTextBox.textComponents_Branch[i].color *= new Color(1f,1f,1f,0f);
                 tarTextBox.imageComponents_Branch[i].color *= new Color(1f, 1f, 1f, 0f);
             }//tail
-
-            tarTextBox.activatedBranchesCount = 0;
+            
+            tarTextBox.branchOperation.ClearBranchs();
             
             return true;
         }
@@ -425,14 +425,18 @@ public class MyTasks
 
     public class TextBoxVariableTask001 : MyTasksAbstract.VariableTask
     {
-        public TextBoxVariableTask001(IBaseTask _closeAnimeTask,IBaseTask[] _preSelectTasks) : base(_preSelectTasks)
+        public TextBoxVariableTask001(
+            IBaseTask _closeAnimeTask,
+            JudgeAction judgeAction,
+            IBaseTask[] _preSelectTasks) : base(_preSelectTasks)
         {
+            this.judgeAction = judgeAction;
             this._closeAnimeTask = _closeAnimeTask;
         }
 
         public void AddTask(IBaseTask task)
+        //WatchOut, May cause Bug
         {
-            //WatchOut, May cause Bug
             IBaseTask[] trans = new IBaseTask[_preSelectTasks.Length + 1];
             for(int i=0;i< _preSelectTasks.Length;i++)
                 trans[i] = _preSelectTasks[i];
@@ -444,6 +448,21 @@ public class MyTasks
         {
             await _closeAnimeTask.Execute();
 
+            bool[] judgeResult = judgeAction.Invoke();
+            if(judgeResult.Length>0)//simulation
+            {
+                for (int i=0;i< judgeResult.Length;i++)
+                {
+                    if(!judgeResult[i])
+                    {
+                        for(int j=i;j<judgeResult.Length-1;j++)
+                        {
+                            _preSelectTasks[j] = _preSelectTasks[j + 1];
+                        }
+                        _preSelectTasks[judgeResult.Length - 1] = null;
+                    }
+                }
+            }
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
             return await _preSelectTasks[_nowTaskPointer].Execute();
         }
@@ -456,6 +475,7 @@ public class MyTasks
         }
 
         private IBaseTask _closeAnimeTask;
+        public JudgeAction judgeAction;
     }
 
     public class TextBoxGroupTask : MyTasksAbstract.GroupTask,IBaseTask
@@ -468,7 +488,7 @@ public class MyTasks
 
     public class ChoiceMarkerTask : IBaseTask
     {
-        ChoiceMarkerTask(ChooseForm _tarChooseForm,string _choiceNote)
+        public ChoiceMarkerTask(ChoiceForm _tarChooseForm,string _choiceNote)
         {
             this._choiceNote = _choiceNote;
             this._tarChooseForm = _tarChooseForm;
@@ -486,7 +506,7 @@ public class MyTasks
         }
 
         private string _choiceNote;
-        private ChooseForm _tarChooseForm;
+        private ChoiceForm _tarChooseForm;
     }
 
     //Constructing!!!

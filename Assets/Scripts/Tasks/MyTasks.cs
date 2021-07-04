@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 
 using MyNamespace;
 using System.Collections.Generic;
+using Assets.MyStructures;
 
 public class MyTasksAbstract
 {
@@ -449,19 +450,21 @@ public class MyTasks
             await _closeAnimeTask.Execute();
 
             bool[] judgeResult = judgeAction.Invoke();
-            if(judgeResult.Length>0)//simulation
+            int taskLeftCount = 0;
+            for(int i=0;i<judgeResult.Length;i++)
             {
-                for (int i=0;i< judgeResult.Length;i++)
-                {
-                    if(!judgeResult[i])
+                taskLeftCount += judgeResult[i] ? 1 : 0;
+            }
+            if(taskLeftCount < _preSelectTasks.Length)//simulation
+            {
+                IBaseTask[] trans = new IBaseTask[taskLeftCount];
+                for (int i=0,counter = 0;i< judgeResult.Length;i++)
+                    if(judgeResult[i])
                     {
-                        for(int j=i;j<judgeResult.Length-1;j++)
-                        {
-                            _preSelectTasks[j] = _preSelectTasks[j + 1];
-                        }
-                        _preSelectTasks[judgeResult.Length - 1] = null;
+                        trans[counter] = _preSelectTasks[i];
+                        counter++;
                     }
-                }
+                _preSelectTasks = trans;
             }
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
             return await _preSelectTasks[_nowTaskPointer].Execute();
@@ -510,16 +513,28 @@ public class MyTasks
     }
 
     //Constructing!!!
-    public class CuterTask : IBaseTask
+    public class TaskStructCuterTask001 : IBaseTask
     {
-        public CuterTask(Queue<IBaseTask> targetQueue, Queue<IBaseTask> adjustDataQueue)
-        {
+        //public TaskStructCuterTask001(Queue<IBaseTask> _operateQueue, Queue<IBaseTask> _referenceQueue)
+        //{
+        //    this._operateQueue = _operateQueue;
+        //    this._referenceQueue = _referenceQueue;
+        //}
 
+        public TaskStructCuterTask001(UnityAction<IBaseTask[]> ua, IBaseTask[] _referenceArray)
+        {
+            this.ua = ua;
+            this._referenceArray = _referenceArray;
+            _referenceQueue = new Queue<IBaseTask>();
+            foreach (IBaseTask iter in _referenceArray)
+            {
+                _referenceQueue.Enqueue(iter);
+            }
         }
 
         public async Task<bool> Execute()
         {
-            
+            ua.Invoke(_referenceArray);
             return true;
         }
 
@@ -530,8 +545,9 @@ public class MyTasks
             return true;
         }
 
-        private Queue<IBaseTask> _targetQueue;
-        private Queue<IBaseTask> _adjustDataQueue;
+        private UnityAction<IBaseTask[]> ua;
+        private Queue<IBaseTask> _referenceQueue;
+        private IBaseTask[] _referenceArray;
     }
 
     public class Acknowledge_TaskIsComplete : IBaseTask

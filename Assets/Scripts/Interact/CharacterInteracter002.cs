@@ -46,7 +46,7 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj) 
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj)
             && needFeed)
         {
             tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
@@ -54,7 +54,7 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
             MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
                 longLifeObjectManager.tickRecorder.tickCount,
                 tipCarrier);
-            
+
             tAssemble.Enqueue(new MyTasks.TextBoxGroupTask(
                 new IBaseTask[] {
                     new MyTasks.CameraMove_Zoom_001(
@@ -70,7 +70,7 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                         longLifeObjectManager.textBox,
                         20,
                         0.1f),
-                    new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"测试中--",40,0.2f,true)
+                    new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"...",40,0.1f,true)
                 })
             );
 
@@ -78,78 +78,24 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                 new MyTasks.TextBoxBranchAdjust_001(
                     longLifeObjectManager.currentController.locker,
                     longLifeObjectManager.textBox,
-                    //3,
-                    new string[3] { "中文", "English", "русский" },
+                    new string[3] { "你是谁", "这是哪", "…" },
                     20,
                     0.5f,
-                    () => { return judge(3, _dict); }
+                    () => { return new bool[3] { true, true, true }; }
                     )
                 );
-
             tAssemble.Enqueue(
                 new MyTasks.TextBoxVariableTask001(
                     new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
-                    () => { return judge(3, _dict); },
-                    new IBaseTask[3] 
+                    () => { return new bool[3] { true, true, true }; },
+                    new IBaseTask[3]
                     {
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"这是第一个选项",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_1")
-                        }),
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2")
-                        }),
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_3")
-                        })
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"狐：比起我是谁，你还记得之前发生了什么吗",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"狐：看来你是什么都不记得了呢…那我来大概说明一下",40,0.2f,true),
+                        new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"狐：…已经懵到说不出话来了吗，那我大概说明一下情况",40,0.2f,true)
                     }
                 ));
-
-            tAssemble.Enqueue(
-                new MyTasks.TextBoxBranchAdjust_001(
-                    longLifeObjectManager.currentController.locker,
-                    longLifeObjectManager.textBox,
-                    new string[3] { "中文", "English", "русский" },
-                    20,
-                    0.5f,
-                    () => { return judge(3, _dict); }
-                    )
-                );
-
-            tAssemble.Enqueue(
-                new MyTasks.TextBoxVariableTask001(
-                    new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
-                    () => { return judge(3, _dict); },
-                    new IBaseTask[3] 
-                    {
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"这是第一个选项",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_1")
-                        }),
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"this is the second choice",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2")
-                        }),
-                        new MyTasks.TextBoxGroupTask(new IBaseTask[]{
-                            new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_3")
-                        })
-                    }
-                ));
-
-            tAssemble.Enqueue(
-                new MyTasks.TextBoxBranchAdjust_001(
-                    longLifeObjectManager.currentController.locker,
-                    longLifeObjectManager.textBox,
-                    new string[3] { "中文", "English", "русский" },
-                    20,
-                    0.5f,
-                    () => { return judge(3, _dict); }
-                    )
-                );
-
+            
             tAssemble.Enqueue(
                 new MyTasks.TextBoxVariableTask001(
                     new MyTasks.TextBoxBranchAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.5f),
@@ -166,13 +112,22 @@ public class CharacterInteracter002 : MonoBehaviour,IInteractBase
                         }),
                         new MyTasks.TextBoxGroupTask(new IBaseTask[]{
                             new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"Я слышал, вы выбрали три варианта",40,0.2f,true),
-                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_3")
+                            new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_3"),
+                            new MyTasks.TaskStructCuterTask001(tAssemble.ChangeQueueWith,new IBaseTask[]
+                            {
+                                new MyTasks.TextBoxGroupTask( new IBaseTask[]{
+                                new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox,"-新加入队列成功-",40,0.2f,true),
+                                new MyTasks.Acknowledge_TaskIsComplete(this),
+                                new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker,longLifeObjectManager.textBox,20,0.1f),
+                                new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker,tarCam,1f,tarCam.gameObject.transform.position,10,0.7f,true)
+                                })
+                            })
                         })
                     }
                 ));
 
             tAssemble.Enqueue(new MyTasks.TextBoxGroupTask(
-                new IBaseTask[3] {
+                new IBaseTask[] {
                     new MyTasks.Acknowledge_TaskIsComplete(this),
                     new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker,longLifeObjectManager.textBox,20,0.1f),
                     new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker,tarCam,1f,tarCam.gameObject.transform.position,10,0.7f,true)

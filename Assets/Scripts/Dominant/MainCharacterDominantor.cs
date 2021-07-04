@@ -16,7 +16,7 @@ public class MainCharacterDominantor : MonoBehaviour
         public MytaskAssemble001(long tickID, MyNamespace.ITipBase tipCarrier)
         {
             this.tipCarrier = tipCarrier;
-            _data = new Queue<IBaseTask>();
+            data = new Queue<IBaseTask>();
             isExecuting = false;
 
             this.tickID = tickID;
@@ -24,22 +24,22 @@ public class MainCharacterDominantor : MonoBehaviour
         
         public void Enqueue(IBaseTask task)
         {
-            _data.Enqueue(task);
+            data.Enqueue(task);
         }
 
         public int Count
         {
-            get { return _data.Count; }
+            get { return data.Count; }
         }
-
+        
         public async void Execute()
         {
             if (isExecuting) return;
-            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
+            if (data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | Execute(void)");
             else
             {
                 isExecuting = true;
-                await _data.Dequeue().Execute_P(this);
+                await data.Dequeue().Execute_P(this);
             }
             Debug.Log("All Done");
         }
@@ -47,19 +47,26 @@ public class MainCharacterDominantor : MonoBehaviour
         public async void ExecuteVariableTask_Path001(int para)
         {
             if (isExecuting) return;
-            if (_data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | ExecuteVariableTask_Path001(void)");
+            if (data.Count == 0) throw new System.Exception("Too less Tasks remaining for Execute | ExecuteVariableTask_Path001(void)");
             else
             {
                 isExecuting = true;
-                IVariableTask current = _data.Dequeue() as IVariableTask;
+                IVariableTask current = data.Dequeue() as IVariableTask;
                 await current.Select(para).Execute_P(this);
             }
+        }
+
+        public void ChangeQueueWith(IBaseTask[] reference)
+        {
+            data.Clear();
+            foreach (IBaseTask iter in reference)
+                data.Enqueue(iter);
         }
 
         int IBaseTaskAssemble.Execute_GetCount()
         {
             Execute();
-            return _data.Count;
+            return data.Count;
         }
 
         public void ReleaseExecutingStatus()
@@ -68,7 +75,8 @@ public class MainCharacterDominantor : MonoBehaviour
         }
         
         public long tickID;
-        private Queue<IBaseTask> _data;
+        public Queue<IBaseTask> data;
+        //public Queue<IBaseTask> Data { get => _data; set => _data = value; }
         public bool isExecuting;
     }
 }

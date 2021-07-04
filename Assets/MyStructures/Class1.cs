@@ -36,7 +36,12 @@ namespace Assets.MyStructures
             }
         }
 
-        public void Push(T inVal)
+        public void Enqueue(T inVal) //equals to Push()
+        {
+            Push(inVal);
+        }
+
+        public void Push(T inVal) //equals to Enqueue()
         {
             if (_pushPointer == _innerSize)
             {

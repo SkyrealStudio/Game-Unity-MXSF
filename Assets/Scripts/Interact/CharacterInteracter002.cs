@@ -329,17 +329,20 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj) && needFeed)
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
             try
             {
-                if (tickID_list.Contains(targetDominantor.taskStack.Tail().tickID))
+                if (targetDominantor.taskStack.Count > 0)
                 {
-                    targetDominantor.taskStack.Dequeue();
-                }
-                else if (tickID_list.Contains(targetDominantor.taskStack.Top().tickID))
-                {
-                    targetDominantor.taskStack.PopTop();
+                    if (tickID_list.Contains(targetDominantor.taskStack.Tail().tickID))
+                    {
+                        targetDominantor.taskStack.Dequeue();
+                    }
+                    else if (tickID_list.Contains(targetDominantor.taskStack.Top().tickID))
+                    {
+                        targetDominantor.taskStack.PopTop();
+                    }
                 }
             }
             catch (System.Exception e)
@@ -349,7 +352,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 
             longLifeObjectManager.tipDominator.Adjust();
 
-            Debug.Log("leave: "+gameObject.name);
+            Debug.Log("leave: " + gameObject.name);
         }
     }
 }

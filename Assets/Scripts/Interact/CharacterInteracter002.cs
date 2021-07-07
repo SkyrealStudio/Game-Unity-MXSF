@@ -68,8 +68,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             //_indexX == 0
             _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_001(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
-            _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 1f, tarCam.gameObject.transform.position, 10, 0.7f, true);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
+            _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 1f, tarCam.gameObject.transform.position, 10, 0.7f, true);//2
 
             //StartBranch -- MC 
             //_indexX == 1
@@ -82,7 +82,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_003(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[1] { "所以说这里…" }, 20, 0.5f);
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_003(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[1] { "…" }, 20, 0.5f);
 
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_001(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[2] { "我该做什么", "为什么你在这里" }, 20, 0.5f, judgeAction1);
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_001(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[2] { "我该做什么", "为什么你在这里" }, 20, 0.5f, judgeAction1);//7
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_003(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[1] { "你为什么要帮我" }, 20, 0.5f);
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxBranchAdjust_003(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, new string[1] { "没什么了" }, 20, 0.5f);//9
 
@@ -111,15 +111,20 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：这里是你创建的空间，所以这些场景都是与你的记忆有关联的。你可以试着找到大门钥匙从这里离开，说不定会有什么线索。", 40, 0.2f, true);
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：（叹气）谢谢，我已经说完了。我想我已经解释的十分清楚了吧，如果有什么问题可以提问，不过可以的话我不想再解释我已经解释过的问题。", 40, 0.2f, true);//12
 
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：我之前说过了吧…找到你的记忆然后离开这里，当然，如果你愿意呆在这里我也没意见。", 40, 0.2f, true);
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：我之前说过了吧…找到你的记忆然后离开这里，当然，如果你愿意呆在这里我也没意见。", 40, 0.2f, true);//13
+
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：…", 40, 0.2f, true);//14
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：我在这里是为了引导你离开这里。而且…我认为这里除了我就没有正常的生物了，所以相信我才是最正确的选择。", 40, 0.2f, true);
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：你可以理解为利害一致，总之，我不会害你，并且会帮助你离开这个地方。", 40, 0.2f, true);
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：当然，因为是合作，我也希望你能够和我配合…这样双方都会少很多麻烦。", 40, 0.2f, true);
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：还有什么要问的吗？", 40, 0.2f, true);
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：我在这里是为了引导你离开这里。而且…我认为这里除了我就没有正常的生物了，所以相信我才是最正确的选择。", 40, 0.2f, true);//15
+
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：你可以理解为利害一致，总之，我不会害你，并且会帮助你离开这个地方。", 40, 0.2f, true);//16
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：当然，因为是合作，我也希望你能够和我配合…这样双方都会少很多麻烦。", 40, 0.2f, true);//17
+
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：还有什么要问的吗？", 40, 0.2f, true);//18
+
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：是吗，那么咨询环节就这么结束了。", 40, 0.2f, true);//19
             _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：好，那么接下来在教室之类的地方走动一下找找线索吧，我在这里等你。", 40, 0.2f, true);//20
-            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：…好了，理解完现在的状况了就赶紧去找线索，我说会在这里等你，但务必快一些。", 40, 0.2f, true);
+
+            _taskArray[_indexX,_indexY++] = new MyTasks.TextBoxTextWork_001(longLifeObjectManager.textBox, "狐：…好了，理解完现在的状况了就赶紧去找线索，我说会在这里等你，但务必快一些。", 40, 0.2f, true);//21
 
             //AllEnd
             //_indexX == 4
@@ -136,7 +141,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
         {
             return new MyTasks.TextBoxGroupTask(new IBaseTask[2] { a, b });
         }
-        public static MyTasks.TextBoxGroupTask Pack_GPTsk(IBaseTask[] tasks)
+        public static MyTasks.TextBoxGroupTask Pack_GroupTsk(IBaseTask[] tasks)
         {
             return new MyTasks.TextBoxGroupTask(tasks);
         }
@@ -151,9 +156,9 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             return new MyTasks.TextBoxVariableTask002(a, b);
         }
 
-        public static MyTasks.TaskStructCuterTask001 Pack_CuterTsk001(UnityAction<IBaseTask[]> ua, IBaseTask[] refTsks)
+        public static MyTasks.TaskStructModifierTask001 Pack_CuterTsk001(UnityAction<IBaseTask[]> ua, IBaseTask[] refTsks)
         {
-            return new MyTasks.TaskStructCuterTask001(ua, refTsks);
+            return new MyTasks.TaskStructModifierTask001(ua, refTsks);
         }
 
         public Camera tarCam;
@@ -168,71 +173,156 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj)
-            && needFeed)
+        if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
-            tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
-            //把一个接口实例放入玩家的接口结构中
-            MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
-                longLifeObjectManager.tickRecorder.tickCount,
-                tipCarrier);
+            if (needFeed)
+            {
+                tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
+                MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
+                    longLifeObjectManager.tickRecorder.tickCount,
+                    tipCarrier);
 
-            // ua : tAssemble.ChangeQueueWith
-            // tAssemble.Enqueue();
+                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                    myTaskFactory.GetTask(0, 0), //zoom
+                    myTaskFactory.GetTask(0, 1), //show Box
+                    myTaskFactory.GetTask(3, 0)  //show TextInit
+                }));
 
-            tAssemble.Enqueue(MyTaskFactory.Pack_GPTsk(new IBaseTask[]{
-                myTaskFactory.GetTask(0, 0), //zoom
-                myTaskFactory.GetTask(0, 1), //show Box
-                myTaskFactory.GetTask(3, 0)  //show TextInit
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 0));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                    myTaskFactory.GetTask(3, 1),
+                    myTaskFactory.GetTask(3, 2),
+                    myTaskFactory.GetTask(3, 3)
+                }));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 0));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
-                myTaskFactory.GetTask(3, 1),
-                myTaskFactory.GetTask(3, 2),
-                myTaskFactory.GetTask(3, 3)
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 4));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 1));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                    myTaskFactory.GetTask(3, 5)
+                }));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(3, 4));
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 1));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
-                myTaskFactory.GetTask(3, 5)
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 2));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                    myTaskFactory.GetTask(3,6)
+                }));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 2));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
-                myTaskFactory.GetTask(3,6)
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 7));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 3));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                    myTaskFactory.GetTask(3,8)
+                }));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(3, 7));
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 3));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
-                myTaskFactory.GetTask(3,8)
-            }));
-            
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 4));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
-                myTaskFactory.GetTask(3,9)
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 4));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                    myTaskFactory.GetTask(3,9)
+                }));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 5));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
-                myTaskFactory.GetTask(3,10)
-            }));
-            tAssemble.Enqueue(myTaskFactory.GetTask(3, 11));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 5));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                    myTaskFactory.GetTask(3,10)
+                }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 11));
 
-            tAssemble.Enqueue(myTaskFactory.GetTask(1, 6));
-            tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
-                myTaskFactory.GetTask(3,12)
-            }));
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 6));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                    myTaskFactory.GetTask(3,12)
+                }));
 
-            targetDominantor.taskStack.Push(tAssemble);
-            Debug.Log("in: "+gameObject.name);
-            longLifeObjectManager.tipDominator.Adjust();
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 7));
+
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]
+                {
+                    MyTaskFactory.Pack_GPTsk(
+                        myTaskFactory.GetTask(3,13),
+                        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_1")
+                    ),
+                    MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                        myTaskFactory.GetTask(3,14),
+                        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2"),
+                        new MyTasks.TaskStructModifierTask001(tAssemble.InsertQueueWith,new IBaseTask[]{
+                            myTaskFactory.GetTask(3,15),
+
+                            myTaskFactory.GetTask(1,8),
+                            MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                                myTaskFactory.GetTask(3,16)
+                            }),
+                            myTaskFactory.GetTask(3,17),
+                        })
+                    })
+                }));
+
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 18));
+
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 7));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk001(myTaskFactory.GetTask(2, 0), () => { return judge(2, _dict); }, new IBaseTask[]
+                {
+                    MyTaskFactory.Pack_GPTsk(
+                        myTaskFactory.GetTask(3,13),
+                        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_1")
+                    ),
+                    MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                        myTaskFactory.GetTask(3,14),
+                        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2"),
+                        new MyTasks.TaskStructModifierTask001(tAssemble.InsertQueueWith,new IBaseTask[]{
+                            myTaskFactory.GetTask(3,15),
+
+                            myTaskFactory.GetTask(1,8),
+                            MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                                myTaskFactory.GetTask(3,16)
+                            }),
+                            myTaskFactory.GetTask(3,17),
+                        })
+                    })
+                }));
+
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 18));
+
+                tAssemble.Enqueue(myTaskFactory.GetTask(1, 9));
+                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                    myTaskFactory.GetTask(3, 19)
+                }));
+
+                tAssemble.Enqueue(myTaskFactory.GetTask(3, 20));
+                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(
+                    new IBaseTask[]
+                    {
+                    myTaskFactory.GetTask(0, 2),
+                    myTaskFactory.GetTask(0, 3),
+                    new MyTasks.Acknowledge_TaskIsComplete(this)
+                    }
+                ));
 
 
+                targetDominantor.taskStack.Push(tAssemble);
+                Debug.Log("in: " + gameObject.name);
+                longLifeObjectManager.tipDominator.Adjust();
+            }
 
-            
+            else
+            {
+                tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
+                MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
+                    longLifeObjectManager.tickRecorder.tickCount,
+                    tipCarrier);
+                
+                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                    myTaskFactory.GetTask(0, 0), //zoom
+                    myTaskFactory.GetTask(0, 1), //show Box
+                    myTaskFactory.GetTask(3, 21)
+                }));
+                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(
+                    new IBaseTask[]
+                    {
+                    myTaskFactory.GetTask(0, 2),//close Box
+                    myTaskFactory.GetTask(0, 3),//zoom
+                    new MyTasks.Acknowledge_TaskIsComplete(this)
+                    }
+                ));
+
+                targetDominantor.taskStack.Push(tAssemble);
+                Debug.Log("in: " + gameObject.name);
+                longLifeObjectManager.tipDominator.Adjust();
+            }
         }
     }
     

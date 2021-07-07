@@ -153,8 +153,10 @@ public class MyTasks
             TextBox tarTextBox,
             int totalSteps,
             float totalTime,
+            bool _clearTextMode = true,
             bool releaseLockMode = false) : base(totalSteps, totalTime)
         {
+            this._clearTextMode = _clearTextMode;
             this.controllerLocker = controllerLocker;
             this.tarTextBox = tarTextBox;
             _releaseLockMode = releaseLockMode;
@@ -166,6 +168,11 @@ public class MyTasks
             tarTextBox.gameObject.SetActive(true);
             if (!Application.isPlaying) return false;
             //防止在游戏退出后更改
+
+            if(_clearTextMode)
+            {
+                tarTextBox.ClearText_Main();
+            }
 
             controllerLocker.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyInteract);
 
@@ -188,6 +195,7 @@ public class MyTasks
         public TextBox tarTextBox;
 
         private bool _releaseLockMode;
+        private bool _clearTextMode;
         public ControllerLocker controllerLocker;
 
     }
@@ -299,6 +307,9 @@ public class MyTasks
                 await Task.Delay(gapTime_ms);
             }
             targetTextBox.SetText_Force_Main(content);//Solve tail
+
+            _currentCount_textContent = 0f;
+            _currentCount_Int_textContent = 0;
 
             return true;
         }
@@ -606,7 +617,7 @@ public class MyTasks
     }
 
     //Constructing!!!
-    public class TaskStructCuterTask001 : IBaseTask
+    public class TaskStructModifierTask001 : IBaseTask
     {
         //public TaskStructCuterTask001(Queue<IBaseTask> _operateQueue, Queue<IBaseTask> _referenceQueue)
         //{
@@ -614,7 +625,7 @@ public class MyTasks
         //    this._referenceQueue = _referenceQueue;
         //}
 
-        public TaskStructCuterTask001(UnityAction<IBaseTask[]> ua, IBaseTask[] _referenceArray)
+        public TaskStructModifierTask001(UnityAction<IBaseTask[]> ua, IBaseTask[] _referenceArray)
         {
             this.ua = ua;
             this._referenceArray = _referenceArray;

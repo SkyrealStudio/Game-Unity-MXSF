@@ -56,6 +56,18 @@ public class MainCharacterDominantor : MonoBehaviour
             }
         }
 
+        public void InsertQueueWith(IBaseTask[] reference)
+        {
+            Queue<IBaseTask> t = new Queue<IBaseTask>();
+            for (int i = 0; i < reference.Length; i++)
+                t.Enqueue(reference[i]);
+            for(; data.Count>0; )
+            {
+                t.Enqueue(data.Dequeue());
+            }
+            data = t;
+        }
+
         public void ChangeQueueWith(IBaseTask[] reference)
         {
             data.Clear();

@@ -310,7 +310,64 @@ public class MyTasks
         public string content;
         public TextBox targetTextBox;
     }
-    
+
+    public class TextBoxBranchAdjust_003 : MyTasksAbstract.TimeAsyncTask, IBaseTask
+    {
+        public TextBoxBranchAdjust_003(
+            ControllerLocker controllerLocker,
+            TextBox tarTextBox,
+            string[] _strShow,
+            int totalSteps,
+            float totalTime
+            
+            ) : base(totalSteps, totalTime)
+        {
+            this.controllerLocker = controllerLocker;
+            this.tarTextBox = tarTextBox;
+            this._strShow = _strShow;
+            
+            branchCount = _strShow.Length;
+
+        }
+
+        public override async Task<bool> Execute()
+        {
+            if (!Application.isPlaying) return false;
+            
+            for (int i=0;i<_strShow.Length;i++)
+                tarTextBox.branchOperation.AddBranch(_strShow[i]);
+            
+            controllerLocker.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyNum, branchCount - 1);
+
+            for (int i = 0; i < branchCount; i++)
+            {
+                tarTextBox.textComponents_Branch[i].color = Color.black;
+                tarTextBox.textComponents_Branch[i].color *= new Color(1f, 1f, 1f, 0f);
+
+                tarTextBox.imageComponents_Branch[i].color = Color.white;
+                tarTextBox.imageComponents_Branch[i].color *= new Color(1f, 1f, 1f, 0f);
+            }
+
+            for (int counter = 0; counter < totalSteps && Application.isPlaying; counter++)
+            {
+                for (int i = 0; i < branchCount; i++)
+                {
+                    tarTextBox.textComponents_Branch[i].color += new Color(0f, 0f, 0f, 1f / totalSteps);
+                    tarTextBox.imageComponents_Branch[i].color += new Color(0f, 0f, 0f, 1f / totalSteps);
+                }
+                await Task.Delay(gapTime_ms);
+                //Debug.Log(counter);
+            }
+
+            return true;
+        }
+
+        private ControllerLocker controllerLocker;
+        private string[] _strShow;
+        public TextBox tarTextBox;
+        public int branchCount;
+    }
+
     public class TextBoxBranchAdjust_001 : MyTasksAbstract.TimeAsyncTask, IBaseTask // show The TextBox's Branch
     {
         public TextBoxBranchAdjust_001(
@@ -424,6 +481,42 @@ public class MyTasks
         public TextBox tarTextBox;
     }
 
+    public class TextBoxVariableTask002 : MyTasksAbstract.VariableTask
+    {
+        public TextBoxVariableTask002(
+            IBaseTask _closeAnimeTask,
+            IBaseTask[] _preSelectTasks) : base(_preSelectTasks)
+        {
+            this._closeAnimeTask = _closeAnimeTask;
+        }
+
+        [Obsolete("WatchOut, May cause Bug", false)]
+        public void AddTask(IBaseTask task)
+        {
+            IBaseTask[] trans = new IBaseTask[_preSelectTasks.Length + 1];
+            for (int i = 0; i < _preSelectTasks.Length; i++)
+                trans[i] = _preSelectTasks[i];
+            trans[_preSelectTasks.Length] = task;
+            _preSelectTasks = trans;
+        }
+
+        public override async Task<bool> Execute()
+        {
+            await _closeAnimeTask.Execute();
+            if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
+            return await _preSelectTasks[_nowTaskPointer].Execute();
+        }
+
+        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
+        {
+            bool tb = await Execute();
+            if (tb) parentExecuter.ReleaseExecutingStatus();
+            return true;
+        }
+
+        private IBaseTask _closeAnimeTask;
+    }
+
     public class TextBoxVariableTask001 : MyTasksAbstract.VariableTask
     {
         public TextBoxVariableTask001(
@@ -435,8 +528,8 @@ public class MyTasks
             this._closeAnimeTask = _closeAnimeTask;
         }
 
+        [Obsolete("WatchOut, May cause Bug", false)]
         public void AddTask(IBaseTask task)
-        //WatchOut, May cause Bug
         {
             IBaseTask[] trans = new IBaseTask[_preSelectTasks.Length + 1];
             for(int i=0;i< _preSelectTasks.Length;i++)

@@ -21,15 +21,7 @@ public class MyTasksAbstract
         }
 
         public abstract Task<bool> Execute();
-
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            if (!Application.isPlaying) return false;
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
-
+        
         public int totalSteps;
         public float totalTime;
 
@@ -57,7 +49,7 @@ public class MyTasksAbstract
         }
 
         public abstract Task<bool> Execute();
-        public abstract Task<bool> Execute_P(IBaseTaskAssemble parentExecuter);
+        
 
         protected IBaseTask[] _preSelectTasks;
         protected int _nowTaskPointer;
@@ -77,14 +69,7 @@ public class MyTasksAbstract
             }
             return true;
         }
-
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            bool tb = await Execute();
-            if(tb) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
-
+        
         protected IBaseTask[] tasks;
     }
 }
@@ -260,13 +245,7 @@ public class MyTasks
             return new Task<bool>(()=> { return true; });
         }
 
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
-
+        
         public TextBox targetTextBox;
     }
 
@@ -517,14 +496,7 @@ public class MyTasks
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
             return await _preSelectTasks[_nowTaskPointer].Execute();
         }
-
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            bool tb = await Execute();
-            if (tb) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
-
+        
         private IBaseTask _closeAnimeTask;
     }
 
@@ -573,13 +545,7 @@ public class MyTasks
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
             return await _preSelectTasks[_nowTaskPointer].Execute();
         }
-
-        public override async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            bool tb = await Execute();
-            if(tb) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
+        
 
         private IBaseTask _closeAnimeTask;
         public JudgeAction judgeAction;
@@ -605,17 +571,42 @@ public class MyTasks
             _tarChooseForm.Choose(_choiceNote);
             return true;
         }
-
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            await Execute();
-            return true;
-        }
-
+        
         private string _choiceNote;
         private ChoiceForm _tarChooseForm;
     }
 
+    //Constructing!!!
+    //public class TaskStructModifierTask001 : IBaseTask
+    //{
+    //    //public TaskStructCuterTask001(Queue<IBaseTask> _operateQueue, Queue<IBaseTask> _referenceQueue)
+    //    //{
+    //    //    this._operateQueue = _operateQueue;
+    //    //    this._referenceQueue = _referenceQueue;
+    //    //}
+
+    //    public TaskStructModifierTask001(UnityAction<IBaseTask[]> ua, IBaseTask[] _referenceArray)
+    //    {
+    //        this.ua = ua;
+    //        this._referenceArray = _referenceArray;
+    //        _referenceQueue = new Queue<IBaseTask>();
+    //        foreach (IBaseTask iter in _referenceArray)
+    //        {
+    //            _referenceQueue.Enqueue(iter);
+    //        }
+    //    }
+
+    //    public async Task<bool> Execute()
+    //    {
+    //        ua.Invoke(_referenceArray);
+    //        return true;
+    //    }
+
+    //    private UnityAction<IBaseTask[]> ua;
+    //    private Queue<IBaseTask> _referenceQueue;
+    //    private IBaseTask[] _referenceArray;
+    //}
+    
     //Constructing!!!
     public class TaskStructModifierTask001 : IBaseTask
     {
@@ -625,10 +616,11 @@ public class MyTasks
         //    this._referenceQueue = _referenceQueue;
         //}
 
-        public TaskStructModifierTask001(UnityAction<IBaseTask[]> ua, IBaseTask[] _referenceArray)
+        public TaskStructModifierTask001(UnityAction<IBaseTask[], MyStruct1<TaskQueueWithTickCount<IBaseTask>>> ua, IBaseTask[] _referenceArray, MyStruct1<TaskQueueWithTickCount<IBaseTask>> targetTaskStruct)
         {
             this.ua = ua;
             this._referenceArray = _referenceArray;
+            this.targetTaskStruct = targetTaskStruct;
             _referenceQueue = new Queue<IBaseTask>();
             foreach (IBaseTask iter in _referenceArray)
             {
@@ -638,20 +630,14 @@ public class MyTasks
 
         public async Task<bool> Execute()
         {
-            ua.Invoke(_referenceArray);
+            ua.Invoke(_referenceArray, targetTaskStruct);
             return true;
         }
 
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            await Execute();
-            parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
-
-        private UnityAction<IBaseTask[]> ua;
+        private UnityAction<IBaseTask[], MyStruct1<TaskQueueWithTickCount<IBaseTask>>> ua;
         private Queue<IBaseTask> _referenceQueue;
         private IBaseTask[] _referenceArray;
+        private MyStruct1<TaskQueueWithTickCount<IBaseTask>> targetTaskStruct;
     }
 
     public class Acknowledge_TaskIsComplete : IBaseTask
@@ -666,14 +652,7 @@ public class MyTasks
             _interacter.InteractIsComplete();
             return true;
         }
-
-        public async Task<bool> Execute_P(IBaseTaskAssemble parentExecuter)
-        {
-            if (!Application.isPlaying) return false;
-            bool completedFlag = await Execute();
-            if (completedFlag) parentExecuter.ReleaseExecutingStatus();
-            return true;
-        }
+        
 
         private IInteractBase _interacter;
     }

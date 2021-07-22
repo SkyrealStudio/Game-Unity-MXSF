@@ -6,17 +6,17 @@ using MyNamespace;
 
 
 
-public class LongLifeObjectManager : MonoBehaviour
+public class LongLifeObjectManager : MonoBehaviour,ITickRecorder
 {
+    
     public Controller001 currentController;
+    
     public GameObject MainCharacterGObj;
-    public Text outTextUI;
-    //public Queue<string> PlotString;
+    
     public GameProperties gameProperties;
-    public TickRecorder tickRecorder;
+    
     public TextBox textBox;
-    public TipDominator tipDominator;
-    //public ChooseForm chooseForm = new ChooseForm();
+    //public TipDominator tipDominator;
 
     public TipTextBoxBranch tipTextBoxBranch;
 
@@ -24,4 +24,11 @@ public class LongLifeObjectManager : MonoBehaviour
     {
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Update()
+    {
+        tickCount++;
+    }
+    private int tickCount = 0;
+    public int GetTickCount() { return tickCount; }
 }

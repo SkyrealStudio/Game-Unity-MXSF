@@ -6,16 +6,19 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 using MyNamespace;
+using Assets.MyStructures;
 
 public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 {
     public LongLifeObjectManager longLifeObjectManager;
 
-    public MainCharacterDominantor targetDominantor;
+    public MainCharacterDominator targetDominantor;
+    public ITaskStructCarrier targetTaskStructCarrier;
     public Camera tarCam;
     public TipCarrier001 tipCarrier;
     public ChoiceFormCarrier choiceFormCarrier;
     private MyTaskFactory myTaskFactory;
+    private ITickRecorder tickRecorder;
 
     private List<long> tickID_list;
 
@@ -25,7 +28,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
     {
         tipCarrier.gameObject.SetActive(false);
         needFeed = false;
-        longLifeObjectManager.tipDominator.Adjust();
+        //longLifeObjectManager.tipDominator.Adjust();
     }
 
     private void Start()
@@ -34,6 +37,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
         needFeed = true;
         myTaskFactory = new MyTaskFactory(longLifeObjectManager, tarCam, this, () => { return judge(2, _dict); });
         myTaskFactory.Load();
+
+        targetTaskStructCarrier = targetDominantor;
     }
 
     private static string[] _dict = { "test_branch_1", "test_branch_2"};
@@ -62,6 +67,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
         
         public void Load()
         {
+            #region
             _indexX = 0;
             _indexY = 0;
 
@@ -130,8 +136,9 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             //_indexX == 4
             _indexX++; _indexY = 0;
             _taskArray[_indexX, _indexY++] = new MyTasks.Acknowledge_TaskIsComplete(_interactBase);
+            #endregion
         }
-        
+
         public IBaseTask GetTask(int indexX, int indexY)
         {
             return _taskArray[indexX, indexY];
@@ -155,12 +162,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
         {
             return new MyTasks.TextBoxVariableTask002(a, b);
         }
-
-        public static MyTasks.TaskStructModifierTask001 Pack_CuterTsk001(UnityAction<IBaseTask[]> ua, IBaseTask[] refTsks)
-        {
-            return new MyTasks.TaskStructModifierTask001(ua, refTsks);
-        }
-
+        
         public Camera tarCam;
         public LongLifeObjectManager longLifeObjectManager;
         private IInteractBase _interactBase;
@@ -175,62 +177,89 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
     {
         if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
+            //targetTaskStructCarrier = collision.gameObject.GetComponent<MainCharacterDominator>();
+
             if (needFeed)
             {
-                tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
-                MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
-                    longLifeObjectManager.tickRecorder.tickCount,
-                    tipCarrier);
+                tickID_list.Add(tickRecorder.GetTickCount());
 
-                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                TaskQueueWithTickCount<IBaseTask> messengerTaskQueue = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
+                
+                //MainCharacterDominantor.MytaskAssemble001 transferMyStruct1 = new MainCharacterDominantor.MytaskAssemble001(
+                //    tickRecorder.GetTickCount(),
+                //    tipCarrier);
+
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
                     myTaskFactory.GetTask(0, 0), //zoom
                     myTaskFactory.GetTask(0, 1), //show Box
                     myTaskFactory.GetTask(3, 0)  //show TextInit
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 0));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 0));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
                     myTaskFactory.GetTask(3, 1),
                     myTaskFactory.GetTask(3, 2),
                     myTaskFactory.GetTask(3, 3)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 4));
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 1));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 4));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 1));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
                     myTaskFactory.GetTask(3, 5)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 2));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 2));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
                     myTaskFactory.GetTask(3,6)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 7));
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 3));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 7));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 3));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
                     myTaskFactory.GetTask(3,8)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 4));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 4));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
                     myTaskFactory.GetTask(3,9)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 5));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 5));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
                     myTaskFactory.GetTask(3,10)
                 }));
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 11));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 11));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 6));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 6));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
                     myTaskFactory.GetTask(3,12)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 7));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 7));
 
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]
+                //messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]
+                //{
+                //    MyTaskFactory.Pack_GPTsk(
+                //        myTaskFactory.GetTask(3,13),
+                //        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_1")
+                //    ),
+                //    MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                //        myTaskFactory.GetTask(3,14),
+                //        new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2"),
+                //        new MyTasks.TaskStructModifierTask001(TaskQueueMethods.InsertQueueWith,new IBaseTask[]{
+                //            myTaskFactory.GetTask(3,15),
+
+                //            myTaskFactory.GetTask(1,8),
+                //            MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]{
+                //                myTaskFactory.GetTask(3,16)
+                //            }),
+                //            myTaskFactory.GetTask(3,17),
+                //        },
+                //        )
+                //    })
+                //}));
+
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[]
                 {
                     MyTaskFactory.Pack_GPTsk(
                         myTaskFactory.GetTask(3,13),
@@ -239,7 +268,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
                         myTaskFactory.GetTask(3,14),
                         new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2"),
-                        new MyTasks.TaskStructModifierTask001(tAssemble.InsertQueueWith,new IBaseTask[]{
+                        new MyTasks.TaskStructModifierTask001(TaskQueueMethods.instance.InsertQueueWith,new IBaseTask[]{
                             myTaskFactory.GetTask(3,15),
 
                             myTaskFactory.GetTask(1,8),
@@ -247,14 +276,15 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                                 myTaskFactory.GetTask(3,16)
                             }),
                             myTaskFactory.GetTask(3,17),
-                        })
+                        },
+                        longLifeObjectManager.MainCharacterGObj.GetComponent<MainCharacterDominator>().GetTaskStruct())
                     })
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 18));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 18));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 7));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk001(myTaskFactory.GetTask(2, 0), () => { return judge(2, _dict); }, new IBaseTask[]
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 7));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk001(myTaskFactory.GetTask(2, 0), () => { return judge(2, _dict); }, new IBaseTask[]
                 {
                     MyTaskFactory.Pack_GPTsk(
                         myTaskFactory.GetTask(3,13),
@@ -263,7 +293,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
                         myTaskFactory.GetTask(3,14),
                         new MyTasks.ChoiceMarkerTask(choiceFormCarrier.choiceForm,"test_branch_2"),
-                        new MyTasks.TaskStructModifierTask001(tAssemble.InsertQueueWith,new IBaseTask[]{
+                        new MyTasks.TaskStructModifierTask001(TaskQueueMethods.instance.InsertQueueWith,new IBaseTask[]{
                             myTaskFactory.GetTask(3,15),
 
                             myTaskFactory.GetTask(1,8),
@@ -271,19 +301,20 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                                 myTaskFactory.GetTask(3,16)
                             }),
                             myTaskFactory.GetTask(3,17),
-                        })
+                        },
+                        longLifeObjectManager.MainCharacterGObj.GetComponent<MainCharacterDominator>().GetTaskStruct())
                     })
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 18));
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 18));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(1, 9));
-                tAssemble.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(1, 9));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_TexVarTsk002(myTaskFactory.GetTask(2, 0), new IBaseTask[] {
                     myTaskFactory.GetTask(3, 19)
                 }));
 
-                tAssemble.Enqueue(myTaskFactory.GetTask(3, 20));
-                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(
+                messengerTaskQueue.Enqueue(myTaskFactory.GetTask(3, 20));
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_GroupTsk(
                     new IBaseTask[]
                     {
                     myTaskFactory.GetTask(0, 2),
@@ -292,25 +323,26 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     }
                 ));
 
-
-                targetDominantor.taskStack.Push(tAssemble);
+                targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue);
                 Debug.Log("in: " + gameObject.name);
-                longLifeObjectManager.tipDominator.Adjust();
+                //longLifeObjectManager.tipDominator.Adjust();
             }
 
             else
             {
-                tickID_list.Add(longLifeObjectManager.tickRecorder.tickCount);
-                MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
-                    longLifeObjectManager.tickRecorder.tickCount,
-                    tipCarrier);
-                
-                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                tickID_list.Add(tickRecorder.GetTickCount());
+
+                TaskQueueWithTickCount<IBaseTask> messengerTaskQueue_noneFeed = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
+                //MainCharacterDominantor.MytaskAssemble001 tAssemble = new MainCharacterDominantor.MytaskAssemble001(
+                //    tickRecorder.GetTickCount(),
+                //    tipCarrier);
+
+                messengerTaskQueue_noneFeed.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
                     myTaskFactory.GetTask(0, 0), //zoom
                     myTaskFactory.GetTask(0, 1), //show Box
                     myTaskFactory.GetTask(3, 21)
                 }));
-                tAssemble.Enqueue(MyTaskFactory.Pack_GroupTsk(
+                messengerTaskQueue_noneFeed.Enqueue(MyTaskFactory.Pack_GroupTsk(
                     new IBaseTask[]
                     {
                     myTaskFactory.GetTask(0, 2),//close Box
@@ -319,9 +351,11 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     }
                 ));
 
-                targetDominantor.taskStack.Push(tAssemble);
+
+                //targetDominantor.taskStack.Push(tAssemble);
+                targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue_noneFeed);
                 Debug.Log("in: " + gameObject.name);
-                longLifeObjectManager.tipDominator.Adjust();
+                //longLifeObjectManager.tipDominator.Adjust();
             }
         }
     }
@@ -331,17 +365,18 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
     {
         if (collision.transform.parent.gameObject.Equals(longLifeObjectManager.MainCharacterGObj))
         {
+            //targetTaskStructCarrier = collision.gameObject.GetComponent<MainCharacterDominator>();
             try
             {
-                if (targetDominantor.taskStack.Count > 0)
+                if (targetTaskStructCarrier.GetTaskStruct().Count > 0)
                 {
-                    if (tickID_list.Contains(targetDominantor.taskStack.Tail().tickID))
+                    if (tickID_list.Contains(targetTaskStructCarrier.GetTaskStruct().Tail().tickCount))
                     {
-                        targetDominantor.taskStack.Dequeue();
+                        targetTaskStructCarrier.GetTaskStruct().Dequeue();
                     }
-                    else if (tickID_list.Contains(targetDominantor.taskStack.Top().tickID))
+                    else if (tickID_list.Contains(targetTaskStructCarrier.GetTaskStruct().Top().tickCount))
                     {
-                        targetDominantor.taskStack.PopTop();
+                        targetTaskStructCarrier.GetTaskStruct().Dequeue();
                     }
                 }
             }
@@ -350,9 +385,15 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                 throw new System.Exception("seems this task have been executed");
             }
 
-            longLifeObjectManager.tipDominator.Adjust();
+            //longLifeObjectManager.tipDominator.Adjust();
 
             Debug.Log("leave: " + gameObject.name);
         }
+    }
+
+
+    private void Awake()
+    {
+        tickRecorder = longLifeObjectManager;
     }
 }

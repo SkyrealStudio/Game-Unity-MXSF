@@ -329,7 +329,6 @@ GameObject:
   m_Component:
   - component: {fileID: 176087319}
   - component: {fileID: 176087318}
-  - component: {fileID: 176087320}
   - component: {fileID: 176087321}
   m_Layer: 0
   m_Name: LongLife
@@ -352,11 +351,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentController: {fileID: 787027200}
   MainCharacterGObj: {fileID: 787027195}
-  outTextUI: {fileID: 0}
   gameProperties: {fileID: 0}
-  tickRecorder: {fileID: 176087320}
   textBox: {fileID: 1819382097}
-  tipDominator: {fileID: 176087321}
   tipTextBoxBranch: {fileID: 1819382095}
 --- !u!4 &176087319
 Transform:
@@ -372,18 +368,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &176087320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 176087317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bbbfdb0f78a0a841946da20fbf692a2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &176087321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,8 +380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8507fbe7911d55b4cb324734278b37bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCharacterDominantor: {fileID: 787027196}
-  spriteRenderers: []
 --- !u!1 &181413364
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,6 +589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 066da1cda36fa294a9228b71447d49b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isExecutingStatus: 0
+  isExecuting: 0
 --- !u!212 &787027197
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -708,7 +692,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   character: {fileID: 787027195}
-  speed: 0.04
+  speed: 4
   force: 250
   longLifeObjectManager: {fileID: 176087318}
 --- !u!1 &1004759000
@@ -1188,7 +1172,7 @@ MonoBehaviour:
   tarCam: {fileID: 1738501937}
   tipCarrier: {fileID: 1915501655}
   choiceFormCarrier: {fileID: 1851284341}
-  needFeed: 0
+  needFeed: 1
 --- !u!50 &1851284338
 Rigidbody2D:
   serializedVersion: 4

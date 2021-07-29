@@ -128,7 +128,7 @@ public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExe
 
     public async void ExecuteVariableTask(int n)
     {
-        if (isExecuting) return;
+        if (isExecuting || !Application.isPlaying) return;
         isExecuting = true;
         IVariableTask variableTask = this.GetTaskStruct().Top().Dequeue() as IVariableTask;
         variableTask.Select(n);

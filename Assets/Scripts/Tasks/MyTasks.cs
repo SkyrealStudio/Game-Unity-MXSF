@@ -74,11 +74,50 @@ public class MyTasksAbstract
     }
 }
 
-public class MyTasks
+namespace MyTasks
 {
     public delegate bool[] JudgeAction();
     public delegate bool[] JudgeAction<T0>(T0 arg0);
+    
+    public class CameraMove_Messenger_Task : IBaseTask
+    {
+        public CameraMove_Messenger_Task(
+            CameraExecuter cameraExecuter,
+            float camSizeProportion,
+            Vector3 finalCamPosition,
+            int totalSteps,
+            float totalTime
+            )
+        {
+            this.cameraExecuter = cameraExecuter;
+            this.camSizeProportion = camSizeProportion;
+            this.finalCamPosition = finalCamPosition;
+            this.totalSteps = totalSteps;
+            this.totalTime = totalTime;
+        }
 
+        public async Task<bool> Execute()
+        {
+            CameraMove_Zoom_002 task = new CameraMove_Zoom_002(
+                cameraExecuter.camera,
+                camSizeProportion,
+                finalCamPosition,
+                totalSteps,
+                totalTime
+            );
+            cameraExecuter.taskQueue.Enqueue(task);
+            cameraExecuter.AckExecuteTask();
+            return true;
+        }
+
+        private CameraExecuter cameraExecuter;
+        private float camSizeProportion;
+        private Vector3 finalCamPosition;
+        private int totalSteps;
+        private float totalTime;
+    }
+
+    [Obsolete("弃用的方法20210727 \n By: ycMia")]
     public class CameraMove_Zoom_001 : MyTasksAbstract.TimeAsyncTask,IBaseTask // zoom and move the camera
     {
         public CameraMove_Zoom_001(
@@ -112,6 +151,7 @@ public class MyTasks
                 tarCam.orthographicSize = Mathf.Lerp(tarCam.orthographicSize, targetCamSize, 0.5f);
                 tarCam.transform.position = Vector3.Lerp(tarCam.transform.position, finalCamPosition, 0.5f);
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
             }
 
             if (_releaseLockMode && (Application.isPlaying))
@@ -130,6 +170,43 @@ public class MyTasks
         private bool _releaseLockMode;
         public ControllerLocker controllerLocker;
     }
+
+    public class CameraMove_Zoom_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask
+    {
+        public CameraMove_Zoom_002(
+            Camera tarCam,
+            float camSizeProportion,
+            Vector3 finalCamPosition,
+            int totalSteps,
+            float totalTime
+            ) : base(totalSteps, totalTime)
+        {
+            this.tarCam = tarCam;
+            this.camSizeProportion = camSizeProportion;
+            this.finalCamPosition = finalCamPosition;
+            this.targetCamSize = tarCam.orthographicSize * camSizeProportion;
+        }
+
+        public override async Task<bool> Execute()
+        {
+            if (!Application.isPlaying) return false;
+            //防止在游戏退出后更改
+            for (int counter = 0; counter < totalSteps && Application.isPlaying; counter++)
+            {
+                tarCam.orthographicSize = Mathf.Lerp(tarCam.orthographicSize, targetCamSize, 0.5f);
+                tarCam.transform.position = Vector3.Lerp(tarCam.transform.position, finalCamPosition, 0.5f);
+                await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
+            }
+
+            return true;
+        }
+        public Camera tarCam;
+        public float camSizeProportion;
+        public Vector3 finalCamPosition;
+        private float targetCamSize;
+    }
+
 
     public class TextBoxAdjust_001 : MyTasksAbstract.TimeAsyncTask, IBaseTask //start The TextBox
     {
@@ -150,8 +227,8 @@ public class MyTasks
 
         public override async Task<bool> Execute()
         {
-            tarTextBox.gameObject.SetActive(true);
             if (!Application.isPlaying) return false;
+            tarTextBox.gameObject.SetActive(true);
             //防止在游戏退出后更改
 
             if(_clearTextMode)
@@ -166,6 +243,7 @@ public class MyTasks
                 tarTextBox.imageComponent_Main.color += new Color(0f, 0f, 0f, 1f / totalSteps);
                 tarTextBox.textComponent_Main.color += new Color(0f, 0f, 0f, 1f / totalSteps);
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
                 //Debug.Log(counter);
             }
 
@@ -213,6 +291,7 @@ public class MyTasks
                 tarTextBox.imageComponent_Main.color += new Color(0f, 0f, 0f, -1f / totalSteps);
                 tarTextBox.textComponent_Main.color += new Color(0f, 0f, 0f, -1f / totalSteps);
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
                 //Debug.Log(counter);
             }
 
@@ -284,6 +363,7 @@ public class MyTasks
                 }
                 
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
             }
             targetTextBox.SetText_Force_Main(content);//Solve tail
 
@@ -346,6 +426,7 @@ public class MyTasks
                     tarTextBox.imageComponents_Branch[i].color += new Color(0f, 0f, 0f, 1f / totalSteps);
                 }
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
                 //Debug.Log(counter);
             }
 
@@ -413,6 +494,7 @@ public class MyTasks
                     tarTextBox.imageComponents_Branch[i].color += new Color(0f, 0f, 0f, 1f / totalSteps);
                 }
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
                 //Debug.Log(counter);
             }
             
@@ -449,15 +531,18 @@ public class MyTasks
             {
                 for (int i = 0; i < tarTextBox.activatedBranchesCount; i++)
                 {
+                    if (!Application.isPlaying) return false;
                     tarTextBox.textComponents_Branch[i].color -= new Color(0f, 0f, 0f, 1f / totalSteps);
                     tarTextBox.imageComponents_Branch[i].color -= new Color(0f, 0f, 0f, 1f / totalSteps);
                 }
                 await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
                 //Debug.Log(counter);
             }
 
             for (int i = 0; i < tarTextBox.activatedBranchesCount; i++)
             {
+                if (!Application.isPlaying) return false;
                 tarTextBox.textComponents_Branch[i].color *= new Color(1f,1f,1f,0f);
                 tarTextBox.imageComponents_Branch[i].color *= new Color(1f, 1f, 1f, 0f);
             }//tail
@@ -492,6 +577,7 @@ public class MyTasks
 
         public override async Task<bool> Execute()
         {
+            if (!Application.isPlaying) return false;
             await _closeAnimeTask.Execute();
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
             return await _preSelectTasks[_nowTaskPointer].Execute();

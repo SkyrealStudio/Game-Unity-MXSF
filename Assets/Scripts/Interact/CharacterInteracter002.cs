@@ -72,11 +72,14 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             _indexY = 0;
 
             //_indexX == 0
-            _taskArray[_indexX, _indexY++] = new MyTasks.Camera_Messenger_Task001(longLifeObjectManager.cameraExecuter, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
+            _taskArray[_indexX, _indexY++] = new MyTasks.Camera_Messenger_Task001(longLifeObjectManager.cameraExecuter, 0.5f, new Vector3(-1.26f, 0f,-10f), 10, 0.7f);
             //_taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_001(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
-            _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 1f, tarCam.gameObject.transform.position, 10, 0.7f, true);//2
+            _taskArray[_indexX, _indexY++] = new MyTasks.Camera_Messenger_Task001(longLifeObjectManager.cameraExecuter, 2.0f, new Vector3(longLifeObjectManager.MainCharacterGObj.transform.position.x,
+                                                                                                                                          longLifeObjectManager.MainCharacterGObj.transform.position.y,
+                                                                                                                                          -10f), 10, 0.7f,true);
+            //_taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 1f, tarCam.gameObject.transform.position, 10, 0.7f, true);//2
 
             //StartBranch -- MC 
             //_indexX == 1
@@ -182,6 +185,36 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 
             if (needFeed)
             {
+
+#if DEBUG
+                tickID_list.Add(tickRecorder.GetTickCount());
+
+                TaskQueueWithTickCount<IBaseTask> messengerTaskQueue = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
+
+                //MainCharacterDominantor.MytaskAssemble001 transferMyStruct1 = new MainCharacterDominantor.MytaskAssemble001(
+                //    tickRecorder.GetTickCount(),
+                //    tipCarrier);
+
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_GroupTsk(new IBaseTask[]{
+                    myTaskFactory.GetTask(0, 0), //zoom
+                    myTaskFactory.GetTask(0, 1), //show Box
+                    myTaskFactory.GetTask(3, 0)  //show TextInit
+                }));
+
+                messengerTaskQueue.Enqueue(MyTaskFactory.Pack_GroupTsk(
+                    new IBaseTask[]
+                    {
+                    myTaskFactory.GetTask(0, 2),
+                    myTaskFactory.GetTask(0, 3),
+                    new MyTasks.Acknowledge_TaskIsComplete(this),
+                    new MyTasks.ControllerLockerAction001(longLifeObjectManager.currentController.locker,ControllerLocker.ControllerLockerState.Unlocked)
+                    }
+                ));
+
+                targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue);
+                Debug.Log("in: " + gameObject.name);
+                //longLifeObjectManager.tipDominator.Adjust();
+#else
                 tickID_list.Add(tickRecorder.GetTickCount());
 
                 TaskQueueWithTickCount<IBaseTask> messengerTaskQueue = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
@@ -320,13 +353,15 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     {
                     myTaskFactory.GetTask(0, 2),
                     myTaskFactory.GetTask(0, 3),
-                    new MyTasks.Acknowledge_TaskIsComplete(this)
+                    new MyTasks.Acknowledge_TaskIsComplete(this),
+                    new MyTasks.ControllerLockerAction001(longLifeObjectManager.currentController.locker,ControllerLocker.ControllerLockerState.Unlocked)
                     }
                 ));
 
                 targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue);
                 Debug.Log("in: " + gameObject.name);
                 //longLifeObjectManager.tipDominator.Adjust();
+#endif
             }
 
             else
@@ -348,7 +383,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                     {
                     myTaskFactory.GetTask(0, 2),//close Box
                     myTaskFactory.GetTask(0, 3),//zoom
-                    new MyTasks.Acknowledge_TaskIsComplete(this)
+                    new MyTasks.Acknowledge_TaskIsComplete(this),
+                    new MyTasks.ControllerLockerAction001(longLifeObjectManager.currentController.locker,ControllerLocker.ControllerLockerState.Unlocked)
                     }
                 ));
 

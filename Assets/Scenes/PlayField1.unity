@@ -354,6 +354,7 @@ MonoBehaviour:
   gameProperties: {fileID: 0}
   textBox: {fileID: 1819382097}
   tipTextBoxBranch: {fileID: 1819382095}
+  cameraExecuter: {fileID: 1738501939}
 --- !u!4 &176087319
 Transform:
   m_ObjectHideFlags: 0

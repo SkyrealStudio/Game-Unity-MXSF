@@ -86,7 +86,8 @@ namespace MyTasks
             float camSizeProportion,
             Vector3 finalCamPosition,
             int totalSteps,
-            float totalTime
+            float totalTime,
+            bool autoEscape = false
             )
         {
             this.cameraExecuter = cameraExecuter;
@@ -94,6 +95,7 @@ namespace MyTasks
             this.finalCamPosition = finalCamPosition;
             this.totalSteps = totalSteps;
             this.totalTime = totalTime;
+            this.autoEscape = autoEscape;
         }
 
         public async Task<bool> Execute()
@@ -104,7 +106,8 @@ namespace MyTasks
                 camSizeProportion,
                 finalCamPosition,
                 totalSteps,
-                totalTime
+                totalTime,
+                autoEscape
             );
             cameraExecuter.taskQueue.Enqueue(task);
             cameraExecuter.AckTaskStart();
@@ -116,6 +119,28 @@ namespace MyTasks
         private Vector3 finalCamPosition;
         private int totalSteps;
         private float totalTime;
+        private bool autoEscape;
+    }
+
+    public class ControllerLockerAction001 : IBaseTask
+    {
+        public ControllerLockerAction001(
+            ControllerLocker controllerLocker,
+            ControllerLocker.ControllerLockerState stateIn
+            )
+        {
+            this.controllerLocker = controllerLocker;
+            this.stateIn = stateIn;
+        }
+        
+        public async Task<bool> Execute()
+        {
+            controllerLocker.LockFrom(this, stateIn);
+            return true;
+        }
+
+        public ControllerLocker controllerLocker;
+        public ControllerLocker.ControllerLockerState stateIn;
     }
 
     [Obsolete("弃用的方法20210727 \n By: ycMia")]
@@ -180,7 +205,8 @@ namespace MyTasks
             float camSizeProportion,
             Vector3 finalCamPosition,
             int totalSteps,
-            float totalTime
+            float totalTime,
+            bool autoEscape = false
             ) : base(totalSteps, totalTime)
         {
             this.cameraExecuterReValueDestination = cameraExecuterReValueDestination;
@@ -188,6 +214,7 @@ namespace MyTasks
             this.camSizeProportion = camSizeProportion;
             this.finalCamPosition = finalCamPosition;
             this.targetCamSize = tarCam.orthographicSize * camSizeProportion;
+            this.autoEscape = autoEscape;
         }
 
         public override async Task<bool> Execute()
@@ -202,6 +229,8 @@ namespace MyTasks
                 if (!Application.isPlaying) return false;
             }
             cameraExecuterReValueDestination.AckTaskEnd();
+            if (autoEscape)
+                cameraExecuterReValueDestination.AckEscape();
             return true;
         }
         private CameraExecuter cameraExecuterReValueDestination;
@@ -209,6 +238,7 @@ namespace MyTasks
         private float camSizeProportion;
         private Vector3 finalCamPosition;
         private float targetCamSize;
+        private bool autoEscape;
     }
 
 

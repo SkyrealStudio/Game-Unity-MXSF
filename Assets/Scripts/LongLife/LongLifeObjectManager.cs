@@ -19,6 +19,7 @@ public class LongLifeObjectManager : MonoBehaviour,ITickRecorder
     //public TipDominator tipDominator;
 
     public TipTextBoxBranch tipTextBoxBranch;
+    public CameraExecuter cameraExecuter;
 
     private void Awake()
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.MyStructures;
 using System;
+using System.Threading.Tasks;
 
 public class CameraExecuter : MonoBehaviour
 {
@@ -10,31 +11,57 @@ public class CameraExecuter : MonoBehaviour
     public LongLifeObjectManager longLifeObjectManager;
     public new Camera camera;
 
-    public class TaskMode
+    public class CamMode
     {
-        private bool isTaskMode;
-
-        public bool IsTaskMode { get => isTaskMode; set => isTaskMode = value; }
-        
-        public TaskMode()
+        public enum Mode
         {
-            isTaskMode = false;
+            isTaskMode,
+            normalMode,
+            WaitUnitillNextTask,
+            Executing,
+            //LockMode,
+        }
+        private Mode mode;
+
+        public void AckTaskStart()
+        {
+            mode = Mode.isTaskMode;
+        }
+        public void AckExecuting()
+        {
+            mode = Mode.Executing;
+        }
+        public void AckTaskEnd()
+        {
+            mode = Mode.WaitUnitillNextTask;
+        }
+
+        public void AckEscape()
+        {
+            mode = Mode.normalMode;
+        }
+
+        public bool IsTaskMode { get => mode == Mode.isTaskMode;}
+        public bool IsExecuting { get => mode == Mode.Executing;  }
+        public bool IsWaitingMode { get => mode == Mode.WaitUnitillNextTask;}
+        public bool IsNormal{ get => mode == Mode.normalMode;}
+        
+        public CamMode()
+        {
+            mode = Mode.normalMode;
         }
     }
-    private TaskMode camTaskMode;
-
-
+    private CamMode camMode;
+    
     public void ReceiveTask(IBaseTask task)
     {
-        camTaskMode.IsTaskMode = true;
         taskQueue.Enqueue(task);
-        camTaskMode.IsTaskMode = false;
     }
     
     private void Awake()
     {
         taskQueue = new TaskQueueWithTickCount<IBaseTask>(longLifeObjectManager.GetTickCount());
-        camTaskMode = new TaskMode();
+        camMode = new CamMode();
     }
 
     void Start()
@@ -73,24 +100,61 @@ public class CameraExecuter : MonoBehaviour
     
     void LateUpdate()
     {
-        if(camTaskMode.IsTaskMode)
+        if(camMode.IsTaskMode)
         {
-            _ExecuteTask();
+            if(taskQueue.Count != 0)
+            {
+                _TryExecuteTask(taskQueue.Count != 0);
+                camMode.AckExecuting();
+            }
+            else
+            {
+                Debug.LogError("CameraExecuter's taskQueue is Empty but you tried to AckTaskStart() it");
+                return;
+            }
         }
-        else
+        else if(camMode.IsWaitingMode 
+             || camMode.IsExecuting)
+        {
+            return;
+        }
+        else if(camMode.IsNormal)
         {
             DoNormalAction();
         }
+        else
+        {
+            throw new System.Exception("Unknown camMode"); 
+        }
     }
-
-
-    public void AckExecuteTask()
+    
+    private bool _TryExecuteTask(bool allowance)
     {
-        camTaskMode.IsTaskMode = true;
+        if (allowance)
+        {
+            taskQueue.Dequeue().Execute();
+            return true;
+        }
+        else
+            return false;
     }
 
-    private void _ExecuteTask()
+
+
+    #region
+    public void AckTaskStart()
     {
-        taskQueue.Dequeue().Execute();
+        camMode.AckTaskStart();
     }
+
+    public void AckTaskEnd()
+    {
+        camMode.AckTaskEnd();
+    }
+
+    public void AckEscape()
+    {
+        camMode.AckEscape();
+    }
+    #endregion
 }

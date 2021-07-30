@@ -72,7 +72,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
             _indexY = 0;
 
             //_indexX == 0
-            _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
+            _taskArray[_indexX, _indexY++] = new MyTasks.Camera_Messenger_Task001(longLifeObjectManager.cameraExecuter, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
+            //_taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 0.5f, tarCam.gameObject.transform.position + new Vector3(0f, -1f), 10, 0.7f);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_001(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
             _taskArray[_indexX, _indexY++] = new MyTasks.TextBoxAdjust_002(longLifeObjectManager.currentController.locker, longLifeObjectManager.textBox, 20, 0.1f);
             _taskArray[_indexX, _indexY++] = new MyTasks.CameraMove_Zoom_001(longLifeObjectManager.currentController.locker, tarCam, 1f, tarCam.gameObject.transform.position, 10, 0.7f, true);//2

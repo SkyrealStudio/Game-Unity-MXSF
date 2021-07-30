@@ -79,9 +79,9 @@ namespace MyTasks
     public delegate bool[] JudgeAction();
     public delegate bool[] JudgeAction<T0>(T0 arg0);
     
-    public class CameraMove_Messenger_Task : IBaseTask
+    public class Camera_Messenger_Task001 : IBaseTask
     {
-        public CameraMove_Messenger_Task(
+        public Camera_Messenger_Task001(
             CameraExecuter cameraExecuter,
             float camSizeProportion,
             Vector3 finalCamPosition,
@@ -99,6 +99,7 @@ namespace MyTasks
         public async Task<bool> Execute()
         {
             CameraMove_Zoom_002 task = new CameraMove_Zoom_002(
+                cameraExecuter,
                 cameraExecuter.camera,
                 camSizeProportion,
                 finalCamPosition,
@@ -106,7 +107,7 @@ namespace MyTasks
                 totalTime
             );
             cameraExecuter.taskQueue.Enqueue(task);
-            cameraExecuter.AckExecuteTask();
+            cameraExecuter.AckTaskStart();
             return true;
         }
 
@@ -174,6 +175,7 @@ namespace MyTasks
     public class CameraMove_Zoom_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask
     {
         public CameraMove_Zoom_002(
+            CameraExecuter cameraExecuterReValueDestination,
             Camera tarCam,
             float camSizeProportion,
             Vector3 finalCamPosition,
@@ -181,6 +183,7 @@ namespace MyTasks
             float totalTime
             ) : base(totalSteps, totalTime)
         {
+            this.cameraExecuterReValueDestination = cameraExecuterReValueDestination;
             this.tarCam = tarCam;
             this.camSizeProportion = camSizeProportion;
             this.finalCamPosition = finalCamPosition;
@@ -198,12 +201,13 @@ namespace MyTasks
                 await Task.Delay(gapTime_ms);
                 if (!Application.isPlaying) return false;
             }
-
+            cameraExecuterReValueDestination.AckTaskEnd();
             return true;
         }
-        public Camera tarCam;
-        public float camSizeProportion;
-        public Vector3 finalCamPosition;
+        private CameraExecuter cameraExecuterReValueDestination;
+        private Camera tarCam;
+        private float camSizeProportion;
+        private Vector3 finalCamPosition;
         private float targetCamSize;
     }
 

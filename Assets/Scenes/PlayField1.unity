@@ -331,7 +331,7 @@ GameObject:
   - component: {fileID: 176087318}
   - component: {fileID: 176087321}
   m_Layer: 0
-  m_Name: LongLife
+  m_Name: PersistentObjectManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -696,7 +696,7 @@ MonoBehaviour:
   character: {fileID: 787027195}
   speed: 4
   force: 250
-  longLifeObjectManager: {fileID: 176087318}
+  persistentObjectManager: {fileID: 0}
 --- !u!1 &890250285
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,7 +1187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03ef5cbcffdf0d44d8471198caee0bd2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  longLifeObjectManager: {fileID: 176087318}
+  persistentObjectManager: {fileID: 176087318}
   camera: {fileID: 1738501937}
 --- !u!1 &1819382093 stripped
 GameObject:
@@ -1258,7 +1258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f59547ee9b7fff448c58b995fdb8d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  longLifeObjectManager: {fileID: 176087318}
+  persistentObjectManager: {fileID: 176087318}
   targetDominantor: {fileID: 787027196}
   tarCam: {fileID: 1738501937}
   tipCarrier: {fileID: 1915501655}

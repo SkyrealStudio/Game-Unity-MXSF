@@ -62,7 +62,7 @@ namespace MyNamespace
         public float speed;
         public float force;
 
-        public LongLifeObjectManager longLifeObjectManager;
+        public PersistentObjectManager persistentObjectManager;
 
         private MainCharacterDominator _mainCharacterDominator;
         private ITaskStructCarrier taskStructCarrier;
@@ -133,7 +133,7 @@ namespace MyNamespace
                     if(Input.GetKeyDown(KeyCode.Alpha1) && locker.numLimit >= 0)
                     {
                         if(!_mainCharacterDominator.isExecuting)
-                            longLifeObjectManager.tipTextBoxBranch.LightUP(0);/**/
+                            persistentObjectManager.tipTextBoxBranch.LightUP(0);/**/
                         //_mainCharacterDominantor.GetTaskStruct().Top().
                         variableTaskExecuter001.ExecuteVariableTask(0);
                         //Debug.Log("Ex0");
@@ -141,14 +141,14 @@ namespace MyNamespace
                     else if(Input.GetKeyDown(KeyCode.Alpha2) && locker.numLimit >= 1)
                     {
                         if (!_mainCharacterDominator.isExecuting)
-                            longLifeObjectManager.tipTextBoxBranch.LightUP(1);/**/
+                            persistentObjectManager.tipTextBoxBranch.LightUP(1);/**/
                         variableTaskExecuter001.ExecuteVariableTask(1);
                         //Debug.Log("Ex1");
                     }
                     else if(Input.GetKeyDown(KeyCode.Alpha3) && locker.numLimit >= 2)
                     {
                         if (!_mainCharacterDominator.isExecuting)
-                            longLifeObjectManager.tipTextBoxBranch.LightUP(2);/**/
+                            persistentObjectManager.tipTextBoxBranch.LightUP(2);/**/
                         variableTaskExecuter001.ExecuteVariableTask(2);
                         //Debug.Log("Ex2");
                     }

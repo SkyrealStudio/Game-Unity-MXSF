@@ -6,7 +6,7 @@ using MyNamespace;
 
 
 
-public class LongLifeObjectManager : MonoBehaviour,ITickRecorder
+public class PersistentObjectManager : MonoBehaviour,ITickRecorder
 {
     
     public Controller001 currentController;

@@ -9,7 +9,7 @@ using MyNamespace;
 using System.Collections.Generic;
 using Assets.MyStructures;
 
-public class MyTasksAbstract
+namespace MyTasksAbstract
 {
     public abstract class TimeAsyncTask : IBaseTask
     {

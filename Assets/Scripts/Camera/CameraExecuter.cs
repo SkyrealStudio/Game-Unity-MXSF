@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public class CameraExecuter : MonoBehaviour
 {
     public Queue<IBaseTask> taskQueue;
-    public LongLifeObjectManager longLifeObjectManager;
+    public PersistentObjectManager persistentObjectManager;
     public new Camera camera;
 
     public class CamMode
@@ -60,7 +60,7 @@ public class CameraExecuter : MonoBehaviour
     
     private void Awake()
     {
-        taskQueue = new TaskQueueWithTickCount<IBaseTask>(longLifeObjectManager.GetTickCount());
+        taskQueue = new TaskQueueWithTickCount<IBaseTask>(persistentObjectManager.GetTickCount());
         camMode = new CamMode();
     }
 
@@ -91,8 +91,8 @@ public class CameraExecuter : MonoBehaviour
     private void DoSneekCamera()
     {
         camera.transform.position = new Vector3(
-            longLifeObjectManager.MainCharacterGObj.transform.position.x,
-            longLifeObjectManager.MainCharacterGObj.transform.position.y,
+            persistentObjectManager.MainCharacterGObj.transform.position.x,
+            persistentObjectManager.MainCharacterGObj.transform.position.y,
             camera.transform.position.z);
         return;
         //throw new NotImplementedException();

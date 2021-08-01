@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class CharacterInteracter001 : MonoBehaviour
 {
-    //public LongLifeObjectManager longLifeObjectManager;
+    //public PersistentObjectManager persistentObjectManager;
 
     ////public MainCharacterDominantor targetDominantor;
     

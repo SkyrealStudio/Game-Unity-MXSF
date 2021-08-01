@@ -5,7 +5,7 @@ public class DialogUI : MonoBehaviour
     private bool _sentenceCompleted = true;
 
     [SerializeField]
-    private LongLifeObjectManager Manager;
+    private PersistentObjectManager Manager;
 
     public void ForwardSentence()
     {

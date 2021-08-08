@@ -10,16 +10,15 @@ namespace Interface.TextPhraser
         selective,
         eventTrigger,
         //special,
-    } 
+    }
 
     public struct TextPhraser_ReturnUnit
     {
-        string Speaker;
-        string[] TextContext;
-        int TextCount;
-        TextStyle textSet;
-
-        List<IBaseTask> Events;
+        public string Speaker;
+        public string[] Content;
+        public ulong Size;
+        public TextStyle Style;
+        public List<IBaseTask> Events;
     }
 
     public interface ITextPhraser_Mk001

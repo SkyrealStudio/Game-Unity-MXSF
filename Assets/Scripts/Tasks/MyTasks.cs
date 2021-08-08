@@ -350,6 +350,11 @@ namespace MyTasks
         public ControllerLocker controllerLocker;
     }
 
+    //20210809 ycMia突击记事
+    //这是我玩日麻的第二次和
+    //然后直接把rain国了个56000分
+    //23333333333
+
     public class TextBoxTextWork_000 : IBaseTask // clear the textBox
     {
         public TextBoxTextWork_000(TextBox targetTextBox)

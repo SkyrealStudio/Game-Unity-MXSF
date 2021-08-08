@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Assets.MyStructures;
 
-using MyNamespace;
-using Assets.MyStructures;
+using Interface.Task;
 
 public class TaskQueueMethods//单例模式
 {

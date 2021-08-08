@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace MyNamespace
+using Interface.Task;
+
+namespace Scripts
 {
     public class ControllerLocker
     {
@@ -16,15 +18,15 @@ namespace MyNamespace
             Interact_And_Num,
         }
         public int numLimit;
-        
+
         public ControllerLocker()
         {
             _state = ControllerLockerState.Unlocked;
         }
 
-        public void LockFrom(object from, ControllerLockerState state,int numLimit = -1)
+        public void LockFrom(object from, ControllerLockerState state, int numLimit = -1)
         {
-            if (numLimit == -1 && state == ControllerLockerState.OnlyNum) throw new System.Exception("no numLimit | LockFrom : " + from.ToString() );
+            if (numLimit == -1 && state == ControllerLockerState.OnlyNum) throw new System.Exception("no numLimit | LockFrom : " + from.ToString());
             this.numLimit = numLimit;
             lastOperator = from;
             _state = state;
@@ -44,7 +46,7 @@ namespace MyNamespace
         private ControllerLockerState _state;
     }
 
-    
+
 
     public enum DirectionState
     {
@@ -76,8 +78,8 @@ namespace MyNamespace
 
             _mainCharacterDominator = gameObject.GetComponent<MainCharacterDominator>();
 
-            taskStructCarrier       = _mainCharacterDominator;
-            taskExecuter            = _mainCharacterDominator;
+            taskStructCarrier = _mainCharacterDominator;
+            taskExecuter = _mainCharacterDominator;
             variableTaskExecuter001 = _mainCharacterDominator;
         }
 
@@ -111,7 +113,7 @@ namespace MyNamespace
                 case ControllerLocker.ControllerLockerState.OnlyInteract:
                     if (Input.GetKeyDown(KeyCode.J))
                     {
-                        if(_mainCharacterDominator.isExecuting == false)
+                        if (_mainCharacterDominator.isExecuting == false)
                         {
                             if (taskStructCarrier.GetTaskStruct().Count > 0 && taskStructCarrier.GetTaskStruct().Top().Count > 0)
                             {
@@ -130,22 +132,22 @@ namespace MyNamespace
                     }
                     break;
                 case ControllerLocker.ControllerLockerState.OnlyNum:
-                    if(Input.GetKeyDown(KeyCode.Alpha1) && locker.numLimit >= 0)
+                    if (Input.GetKeyDown(KeyCode.Alpha1) && locker.numLimit >= 0)
                     {
-                        if(!_mainCharacterDominator.isExecuting)
+                        if (!_mainCharacterDominator.isExecuting)
                             persistentObjectManager.tipTextBoxBranch.LightUP(0);/**/
-                        //_mainCharacterDominantor.GetTaskStruct().Top().
+                                                                                //_mainCharacterDominantor.GetTaskStruct().Top().
                         variableTaskExecuter001.ExecuteVariableTask(0);
                         //Debug.Log("Ex0");
                     }
-                    else if(Input.GetKeyDown(KeyCode.Alpha2) && locker.numLimit >= 1)
+                    else if (Input.GetKeyDown(KeyCode.Alpha2) && locker.numLimit >= 1)
                     {
                         if (!_mainCharacterDominator.isExecuting)
                             persistentObjectManager.tipTextBoxBranch.LightUP(1);/**/
                         variableTaskExecuter001.ExecuteVariableTask(1);
                         //Debug.Log("Ex1");
                     }
-                    else if(Input.GetKeyDown(KeyCode.Alpha3) && locker.numLimit >= 2)
+                    else if (Input.GetKeyDown(KeyCode.Alpha3) && locker.numLimit >= 2)
                     {
                         if (!_mainCharacterDominator.isExecuting)
                             persistentObjectManager.tipTextBoxBranch.LightUP(2);/**/
@@ -159,13 +161,13 @@ namespace MyNamespace
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if(collision.gameObject.tag == "Ground")
+            if (collision.gameObject.tag == "Ground")
                 _onGround = true;
         }
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if(collision.gameObject.tag == "Ground")
+            if (collision.gameObject.tag == "Ground")
                 _onGround = false;
         }
     }

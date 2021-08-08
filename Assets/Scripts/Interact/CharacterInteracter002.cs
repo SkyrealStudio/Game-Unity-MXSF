@@ -5,8 +5,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-using MyNamespace;
+using Scripts;
 using Assets.MyStructures;
+
+using Interface;
+using Interface.Task;
+using Interface.Tick;
 
 public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 {
@@ -402,29 +406,35 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
     {
         if (collision.transform.parent.gameObject.Equals(persistentObjectManager.MainCharacterGObj))
         {
-            //targetTaskStructCarrier = collision.gameObject.GetComponent<MainCharacterDominator>();
+            Debug.Log("leaving: " + gameObject.name);
+
             try
             {
                 if (targetTaskStructCarrier.GetTaskStruct().Count > 0)
                 {
                     if (tickID_list.Contains(targetTaskStructCarrier.GetTaskStruct().Tail().tickCount))
                     {
+                        Debug.Log("Throwing Full Ammo: " + gameObject.name);
                         targetTaskStructCarrier.GetTaskStruct().Dequeue();
                     }
                     else if (tickID_list.Contains(targetTaskStructCarrier.GetTaskStruct().Top().tickCount))
                     {
+                        Debug.Log("Throwing Empty Shell: " + gameObject.name);
                         targetTaskStructCarrier.GetTaskStruct().Dequeue();
                     }
+                }
+                else
+                {
+                    
                 }
             }
             catch (System.Exception e)
             {
-                throw new System.Exception("seems this task have been executed");
+                //throw new System.Exception("seems this task have been executed... \nException String: "+e.ToString());
+                throw new System.Exception("TaskStructCarrier Broken! \nException String: "+e.ToString());
             }
 
             //persistentObjectManager.tipDominator.Adjust();
-
-            Debug.Log("leave: " + gameObject.name);
         }
     }
 

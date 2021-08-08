@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MyNamespace;
 
+using Scripts;
 
+using Interface.Tick;
 
 public class PersistentObjectManager : MonoBehaviour,ITickRecorder
 {

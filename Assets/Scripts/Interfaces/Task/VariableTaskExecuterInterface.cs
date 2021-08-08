@@ -4,7 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-interface IVariableTaskExecuter001
+namespace Interface.Task
 {
-    void ExecuteVariableTask(int n);
+    interface IVariableTaskExecuter001
+    {
+        void ExecuteVariableTask(int n);
+    }
 }

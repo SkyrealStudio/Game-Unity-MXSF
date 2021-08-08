@@ -4,6 +4,8 @@ using UnityEngine;
 using Assets.MyStructures;
 using System.Threading.Tasks;
 
+using Interface.Task;
+
 public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExecuter, IVariableTaskExecuter001
 {
     //public Stack<IGeneralTask> generalTaskStack = new Stack<IGeneralTask>();

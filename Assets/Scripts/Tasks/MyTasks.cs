@@ -5,7 +5,12 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-using MyNamespace;
+using Interface.Task;
+using Interface.Tick;
+using Interface;
+
+using Scripts;
+
 using System.Collections.Generic;
 using Assets.MyStructures;
 

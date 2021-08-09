@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace Scripts
+namespace Scripts.Helper
 {
     public class CameraLimit_InRoom : MonoBehaviour
     {

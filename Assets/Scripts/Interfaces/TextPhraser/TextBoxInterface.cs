@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Interface.Task;
-
-namespace Interface.TextPhraser
+﻿namespace Interface.TextParser
 {
     public enum TextStyle
     {
@@ -11,19 +7,20 @@ namespace Interface.TextPhraser
         eventTrigger,
         //special,
     }
-
-    public struct TextPhraser_ReturnUnit
+    
+    public class TextParser_ReturnUnit_Mk002
     {
         public string Speaker;
         public string[] Content;
         public ulong Size;
         public TextStyle Style;
-        public List<IBaseTask> Events;
-    }
 
-    public interface ITextPhraser_Mk001
+        public TextParser_ReturnUnit_Mk002 next;
+    }
+    
+    public interface ITextParser_Mk002
     {
         bool SetTarget(string scriptAssetPath);//return whether it success or not
-        TextPhraser_ReturnUnit GetSingleUnit();
+        TextParser_ReturnUnit_Mk002 GetSingleUnit();
     }
 }

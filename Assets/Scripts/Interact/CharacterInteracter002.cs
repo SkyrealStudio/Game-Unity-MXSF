@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
+using MethodClasses;
 using Scripts;
-using Assets.MyStructures;
+using MyStructures;
 
 using Interface;
 using Interface.Task;

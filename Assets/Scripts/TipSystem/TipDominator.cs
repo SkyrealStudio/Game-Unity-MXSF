@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.MyStructures;
+using MyStructures;
 
 public class TipDominator : MonoBehaviour
 {

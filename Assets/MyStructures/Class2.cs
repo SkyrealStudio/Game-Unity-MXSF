@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngineInternal;
 using System.Threading.Tasks;
 
-namespace Assets.MyStructures
+namespace MyStructures
 {
     class Class2
     {

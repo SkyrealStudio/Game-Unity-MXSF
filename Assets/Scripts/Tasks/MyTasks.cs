@@ -12,7 +12,7 @@ using Interface;
 using Scripts;
 
 using System.Collections.Generic;
-using Assets.MyStructures;
+using MyStructures;
 
 namespace MyTasksAbstract
 {
@@ -353,6 +353,7 @@ namespace MyTasks
     //20210809 ycMia突击记事
     //这是我玩日麻的第二次和
     //然后直接把rain国了个56000分
+    //一条 九条 一筒 九筒 一万 九万 东 南 西 北 中 发财 白板 + 九条 
     //23333333333
 
     public class TextBoxTextWork_000 : IBaseTask // clear the textBox

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.MyStructures
+namespace MyStructures
 {
     public class MyStruct1<T>
     {

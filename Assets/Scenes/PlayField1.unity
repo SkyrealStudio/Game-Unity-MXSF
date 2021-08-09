@@ -696,7 +696,7 @@ MonoBehaviour:
   character: {fileID: 787027195}
   speed: 4
   force: 250
-  persistentObjectManager: {fileID: 0}
+  persistentObjectManager: {fileID: 176087318}
 --- !u!1 &890250285
 GameObject:
   m_ObjectHideFlags: 0

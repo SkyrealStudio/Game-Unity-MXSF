@@ -190,8 +190,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
 
             if (needFeed)
             {
-
-#if DEBUG
+                
+                /*
                 tickID_list.Add(tickRecorder.GetTickCount());
 
                 TaskQueueWithTickCount<IBaseTask> messengerTaskQueue = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
@@ -219,7 +219,8 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                 targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue);
                 Debug.Log("in: " + gameObject.name);
                 //persistentObjectManager.tipDominator.Adjust();
-#else
+                */
+
                 tickID_list.Add(tickRecorder.GetTickCount());
 
                 TaskQueueWithTickCount<IBaseTask> messengerTaskQueue = new TaskQueueWithTickCount<IBaseTask>(tickRecorder.GetTickCount());
@@ -366,7 +367,7 @@ public class CharacterInteracter002 : MonoBehaviour, IInteractBase
                 targetTaskStructCarrier.GetTaskStruct().Push(messengerTaskQueue);
                 Debug.Log("in: " + gameObject.name);
                 //persistentObjectManager.tipDominator.Adjust();
-#endif
+
             }
 
             else

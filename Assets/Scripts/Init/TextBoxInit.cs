@@ -28,7 +28,6 @@ public class TextBoxInit : MonoBehaviour
         {
             i.color = new Color(i.color.r, i.color.g, i.color.b, 0f);
         }
-
         Destroy(this);
     }
 }

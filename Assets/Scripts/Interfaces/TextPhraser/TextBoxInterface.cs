@@ -13,7 +13,7 @@ namespace Interface.TextParser
             //special,
         }
         
-        public class Unit_Mk003
+        public class Unit_Mk004
         {
             public ulong SelfIndex;
             
@@ -22,13 +22,13 @@ namespace Interface.TextParser
             public TextStyle style;
 
             public ulong[] PossibleNextIndexs;
-            //public Unit_Mk003[] nexts;
+            //public Unit_Mk004[] nexts;
         }
     }
 
-    public interface ITextParser_Mk003
+    public interface ITextParser_Mk004
     {
         bool SetTargetFile(string scriptAssetPath);//return whether it success or not
-        Unit_Mk003 GetUnit(ulong index);
+        Unit_Mk004 GetUnit(ulong index);
     }
 }

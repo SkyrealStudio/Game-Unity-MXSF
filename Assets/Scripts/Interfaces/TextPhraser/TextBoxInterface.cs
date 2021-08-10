@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Interface.TextParser.ReturnUnit;
+﻿using Interface.TextParser.ReturnUnit;
 
 namespace Interface.TextParser
 {

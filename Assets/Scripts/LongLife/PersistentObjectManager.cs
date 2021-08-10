@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 using Scripts;
 
+using Interface.Task;
 using Interface.Tick;
+using Translator;
 
 public class PersistentObjectManager : MonoBehaviour,ITickRecorder
 {
@@ -15,7 +17,9 @@ public class PersistentObjectManager : MonoBehaviour,ITickRecorder
     public GameObject MainCharacterGObj;
     
     public GameProperties gameProperties;
-    
+
+    public ParserUnitToTaskInterface paserTranslator;
+
     public TextBox textBox;
     //public TipDominator tipDominator;
 
@@ -24,6 +28,7 @@ public class PersistentObjectManager : MonoBehaviour,ITickRecorder
 
     private void Awake()
     {
+        paserTranslator = new ParserUnitToTaskTranslator();
         DontDestroyOnLoad(gameObject);
     }
 

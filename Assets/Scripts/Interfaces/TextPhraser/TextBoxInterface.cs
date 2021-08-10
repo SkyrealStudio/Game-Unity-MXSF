@@ -16,9 +16,9 @@ namespace Interface.TextParser
         {
             public ulong SelfIndex;
             
-            public string speaker;
-            public string[] content;
-            public TextStyle style;
+            public string Speaker;
+            public string[] Contents;
+            public TextStyle Style;
 
             public ulong[] PossibleNextIndexs;
             //public Unit_Mk004[] nexts;

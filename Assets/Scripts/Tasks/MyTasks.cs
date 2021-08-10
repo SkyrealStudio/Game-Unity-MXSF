@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using Interface.Task;
 using Interface.Tick;
 using Interface;
+using Interface.Task.Chain;
 
 using Scripts;
 
@@ -79,6 +80,31 @@ namespace MyTasksAbstract
     }
 }
 
+namespace MyTasks
+{
+    public class TaskChainEntrance : IBaseTask
+    {
+        public TaskChainEntrance(ControllerLocker cl,Interface.TextParser.ReturnUnit.Unit_Mk004 unit, ITaskChainNodeCarrier nodeCarrier)
+        {
+            this.cl = cl;
+            this.unit = unit;
+            this.nodeCarrier = nodeCarrier;
+        }
+        public async Task<bool> Execute()
+        {
+            cl.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyInteract_InChain);
+            nodeCarrier.SetTaskChainNode(unit);
+            return true;
+        }
+
+        public Interface.TextParser.ReturnUnit.Unit_Mk004 unit;
+        private ITaskChainNodeCarrier nodeCarrier;
+        private ControllerLocker cl;
+    }
+}
+
+
+//later than 20210810
 namespace MyTasks
 {
     public delegate bool[] JudgeAction();

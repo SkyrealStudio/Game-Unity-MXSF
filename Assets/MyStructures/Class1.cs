@@ -125,7 +125,7 @@ namespace MyStructures
         private int _popPointer;
         private int _pushPointer;
         private int _dequeuePointer;
-
-        public int GetStartIndex { get => _dequeuePointer; }
+        
+        private int GetStartIndex { get => _dequeuePointer; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Interface.Task;
+using Interface.Task.Chain;
 
 namespace Scripts
 {
@@ -16,6 +17,8 @@ namespace Scripts
             OnlyInteract,
             OnlyNum,
             Interact_And_Num,
+
+            OnlyInteract_InChain,
         }
         public int numLimit;
 
@@ -68,8 +71,12 @@ namespace Scripts
 
         private MainCharacterDominator _mainCharacterDominator;
         private ITaskStructCarrier taskStructCarrier;
+        private ITaskChainNodeCarrier taskNodeCarrier;
+
         private ITaskExecuter taskExecuter;
         private IVariableTaskExecuter001 variableTaskExecuter001;
+
+        private ITaskExecuter taskExecuter_Translator;
 
         void Start()
         {
@@ -126,11 +133,23 @@ namespace Scripts
                             }
                         }
                         else
-                        {
-                            //continue;
-                        }
+                        {   }
                     }
                     break;
+
+                case ControllerLocker.ControllerLockerState.OnlyInteract_InChain:
+                    if (Input.GetKey(KeyCode.J))
+                    {
+                        if (_mainCharacterDominator.isExecuting == false)
+                        {
+                            persistentObjectManager.paserTranslator.Translate(_mainCharacterDominator.GetTaskChainNode()).Execute();
+                        }
+                        else
+                        {   }
+                    }
+                    break;
+
+
                 case ControllerLocker.ControllerLockerState.OnlyNum:
                     if (Input.GetKeyDown(KeyCode.Alpha1) && locker.numLimit >= 0)
                     {

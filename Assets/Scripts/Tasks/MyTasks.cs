@@ -8,8 +8,12 @@ using UnityEngine.EventSystems;
 using Interface.Task;
 using Interface.Tick;
 using Interface;
+using Interface.Task.Chain;
 
 using Scripts;
+using Scripts.persistentObject;
+using Shower;
+
 
 using System.Collections.Generic;
 using MyStructures;
@@ -25,7 +29,7 @@ namespace MyTasksAbstract
             gapTime_ms = (int)(this.totalTime * 1000 / totalSteps);
         }
 
-        public abstract Task<bool> Execute();
+        public abstract Task<bool> ExecuteAsync();
         
         public int totalSteps;
         public float totalTime;
@@ -53,7 +57,7 @@ namespace MyTasksAbstract
             return this;
         }
 
-        public abstract Task<bool> Execute();
+        public abstract Task<bool> ExecuteAsync();
         
 
         protected IBaseTask[] _preSelectTasks;
@@ -66,11 +70,11 @@ namespace MyTasksAbstract
         {
             this.tasks = tasks;
         }
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             foreach (IBaseTask iter in tasks)
             {
-                bool tb = await iter.Execute();
+                bool tb = await iter.ExecuteAsync();
             }
             return true;
         }
@@ -79,6 +83,31 @@ namespace MyTasksAbstract
     }
 }
 
+//namespace MyTasks
+//{
+//    public class TaskChainEntrance : IBaseTask
+//    {
+//        public TaskChainEntrance(ControllerLocker cl,Interface.TextParser.ReturnUnit.Unit_Mk004 unit, ITaskChainNodeCarrier nodeCarrier)
+//        {
+//            this.cl = cl;
+//            this.unit = unit;
+//            this.nodeCarrier = nodeCarrier;
+//        }
+//        public async Task<bool> ExecuteAsync()
+//        {
+//            cl.LockFrom(this, ControllerLocker.ControllerLockerState.OnlyInteract_InChain);
+//            nodeCarrier.SetTaskChainNode(unit);
+//            return true;
+//        }
+
+//        public Interface.TextParser.ReturnUnit.Unit_Mk004 unit;
+//        private ITaskChainNodeCarrier nodeCarrier;
+//        private ControllerLocker cl;
+//    }
+//}
+
+
+//later than 20210810
 namespace MyTasks
 {
     public delegate bool[] JudgeAction();
@@ -103,7 +132,7 @@ namespace MyTasks
             this.autoEscape = autoEscape;
         }
 
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             CameraMove_Zoom_002 task = new CameraMove_Zoom_002(
                 cameraExecuter,
@@ -138,7 +167,7 @@ namespace MyTasks
             this.stateIn = stateIn;
         }
         
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             controllerLocker.LockFrom(this, stateIn);
             return true;
@@ -170,7 +199,7 @@ namespace MyTasks
             this.targetCamSize = tarCam.orthographicSize * camSizeProportion;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             //防止在游戏退出后更改
@@ -222,7 +251,7 @@ namespace MyTasks
             this.autoEscape = autoEscape;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             //防止在游戏退出后更改
@@ -264,7 +293,7 @@ namespace MyTasks
             gapTime_ms = (int)(this.totalTime * 1000 / totalSteps);
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             tarTextBox.gameObject.SetActive(true);
@@ -318,7 +347,7 @@ namespace MyTasks
             _releaseLockMode = releaseLockMode;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             //防止在游戏退出后更改
@@ -363,7 +392,7 @@ namespace MyTasks
             this.targetTextBox = targetTextBox;
         }
 
-        public Task<bool> Execute()
+        public Task<bool> ExecuteAsync()
         {
             targetTextBox.ClearText_Main();
             return new Task<bool>(()=> { return true; });
@@ -373,6 +402,7 @@ namespace MyTasks
         public TextBox targetTextBox;
     }
 
+    [Obsolete("ycMia 20210811")]
     public class TextBoxTextWork_001 : MyTasksAbstract.TimeAsyncTask, IBaseTask // show sth in the textBox
     {
         public TextBoxTextWork_001(
@@ -391,7 +421,7 @@ namespace MyTasks
             _currentCount_Int_textContent = 0;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
 
@@ -407,6 +437,57 @@ namespace MyTasks
                         break;
                 }
                 
+                await Task.Delay(gapTime_ms);
+                if (!Application.isPlaying) return false;
+            }
+            targetTextBox.SetText_Force_Main(content);//Solve tail
+
+            _currentCount_textContent = 0f;
+            _currentCount_Int_textContent = 0;
+
+            return true;
+        }
+
+        private float _currentCount_textContent;
+        private int _currentCount_Int_textContent;
+        private float _gapCount_textContent;
+        public bool clearBox;
+        public string content;
+        public TextBox targetTextBox;
+    }
+
+    public class TextBoxTextWork_002 : MyTasksAbstract.TimeAsyncTask, IBaseTask // show sth in the textBox...from Parser
+    {
+        public TextBoxTextWork_002(
+            DefaultUIShowerSetting uiSetting,
+            string content,
+            bool clearBox = false
+            ) : base(content.Length, content.Length * uiSetting.speedPerChar)
+        {
+            this.clearBox = clearBox;
+            this.targetTextBox = uiSetting.UItextBox;
+            this.content = content;
+            _gapCount_textContent = (float)this.content.Length / (float)totalSteps;
+            _currentCount_textContent = 0f;
+            _currentCount_Int_textContent = 0;
+        }
+
+        public override async Task<bool> ExecuteAsync()
+        {
+            if (!Application.isPlaying) return false;
+
+            if (clearBox) targetTextBox.ClearText_Main();
+            for (int counter = 0; counter < totalSteps && Application.isPlaying; counter++)
+            {
+                _currentCount_textContent += _gapCount_textContent;
+                for (; _currentCount_Int_textContent < (int)_currentCount_textContent; _currentCount_Int_textContent++)
+                {
+                    if (_currentCount_Int_textContent < (content.Length - 1))
+                        targetTextBox.AppendText_Main(content[_currentCount_Int_textContent]);
+                    else
+                        break;
+                }
+
                 await Task.Delay(gapTime_ms);
                 if (!Application.isPlaying) return false;
             }
@@ -445,7 +526,7 @@ namespace MyTasks
 
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             
@@ -507,7 +588,7 @@ namespace MyTasks
 
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
 
@@ -566,7 +647,7 @@ namespace MyTasks
             this.tarTextBox = tarTextBox;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
 
@@ -620,12 +701,12 @@ namespace MyTasks
             _preSelectTasks = trans;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
-            await _closeAnimeTask.Execute();
+            await _closeAnimeTask.ExecuteAsync();
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
-            return await _preSelectTasks[_nowTaskPointer].Execute();
+            return await _preSelectTasks[_nowTaskPointer].ExecuteAsync();
         }
         
         private IBaseTask _closeAnimeTask;
@@ -652,9 +733,9 @@ namespace MyTasks
             _preSelectTasks = trans;
         }
 
-        public override async Task<bool> Execute()
+        public override async Task<bool> ExecuteAsync()
         {
-            await _closeAnimeTask.Execute();
+            await _closeAnimeTask.ExecuteAsync();
 
             bool[] judgeResult = judgeAction.Invoke();
             int taskLeftCount = 0;
@@ -674,7 +755,7 @@ namespace MyTasks
                 _preSelectTasks = trans;
             }
             if (_nowTaskPointer == -1) throw new System.Exception("No selected task but you tried to execute it ! | TextBoxVariableTask001.Execute");
-            return await _preSelectTasks[_nowTaskPointer].Execute();
+            return await _preSelectTasks[_nowTaskPointer].ExecuteAsync();
         }
         
 
@@ -697,7 +778,7 @@ namespace MyTasks
             this._choiceNote = _choiceNote;
             this._tarChooseForm = _tarChooseForm;
         }
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             _tarChooseForm.Choose(_choiceNote);
             return true;
@@ -759,7 +840,7 @@ namespace MyTasks
             }
         }
 
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             ua.Invoke(_referenceArray, targetTaskStruct);
             return true;
@@ -777,7 +858,7 @@ namespace MyTasks
         {
             this._interacter = _interacter;
         }
-        public async Task<bool> Execute()
+        public async Task<bool> ExecuteAsync()
         {
             if (!Application.isPlaying) return false;
             _interacter.InteractIsComplete();

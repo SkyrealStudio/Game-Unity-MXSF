@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Interface.Task;
+using Interface.Task.Chain;
+using Interface.TextParser.ReturnUnit;
 
 namespace Scripts
 {
@@ -16,6 +18,8 @@ namespace Scripts
             OnlyInteract,
             OnlyNum,
             Interact_And_Num,
+
+            OnlyInteract_InChain,
         }
         public int numLimit;
 
@@ -68,8 +72,14 @@ namespace Scripts
 
         private MainCharacterDominator _mainCharacterDominator;
         private ITaskStructCarrier taskStructCarrier;
+        private ITaskChainNodeCarrier taskNodeCarrier;
+
         private ITaskExecuter taskExecuter;
         private IVariableTaskExecuter001 variableTaskExecuter001;
+
+        private ITaskExecuter taskExecuter_Translator;
+
+        
 
         void Start()
         {
@@ -83,15 +93,25 @@ namespace Scripts
             variableTaskExecuter001 = _mainCharacterDominator;
         }
 
+        private void Normal_PlayerInteract()
+        {
+            Unit_Mk004 t = _mainCharacterDominator.GetTaskEntranceStruct().PopTop();
+        }
+
+        private void Entrance_PlayerInteract()
+        {
+            
+        }
+
         void Update()
         {
             switch (locker.Value)
             {
                 case ControllerLocker.ControllerLockerState.Unlocked:
-                    if (taskStructCarrier.GetTaskStruct().Count > 0 && taskStructCarrier.GetTaskStruct().Top().Count == 0)
-                    {
-                        taskStructCarrier.GetTaskStruct().PopTop();
-                    }
+                    //if (taskStructCarrier.GetTaskStruct().Count > 0 && taskStructCarrier.GetTaskStruct().Top().Count == 0)
+                    //{
+                    //    taskStructCarrier.GetTaskStruct().PopTop();
+                    //}
 
                     if (_onGround && Input.GetKeyDown(KeyCode.W))
                         character_rigidbody2D.AddForce(new Vector2(0f, force));
@@ -105,32 +125,59 @@ namespace Scripts
                         character.gameObject.transform.Translate(new Vector2(speed * Time.deltaTime, 0f));
                     if (Input.GetKeyDown(KeyCode.J))
                     {
-                        if (taskStructCarrier.GetTaskStruct().Count > 0)
-                            //Debug.Log("1");
-                            taskExecuter.ExecuteTask();
+                        Entrance_PlayerInteract();
                     }
                     break;
+
                 case ControllerLocker.ControllerLockerState.OnlyInteract:
                     if (Input.GetKeyDown(KeyCode.J))
                     {
-                        if (_mainCharacterDominator.isExecuting == false)
-                        {
-                            if (taskStructCarrier.GetTaskStruct().Count > 0 && taskStructCarrier.GetTaskStruct().Top().Count > 0)
-                            {
-                                //Debug.Log("2");
-                                taskExecuter.ExecuteTask();
-                            }
-                            else
-                            {
-                                throw new System.Exception("This ChildQueue is Empty but latest task didn't give back the locker.Value | Input.GetKeyDown(KeyCode.J)");
-                            }
-                        }
-                        else
-                        {
-                            //continue;
-                        }
+                        //if (_mainCharacterDominator.isExecuting == false)
+                        //{
+                        //    if (taskStructCarrier.GetTaskStruct().Count > 0 && taskStructCarrier.GetTaskStruct().Top().Count > 0)
+                        //    {
+                        //        //Debug.Log("2");
+                        //        taskExecuter.ExecuteTask();
+                        //    }
+                        //    else
+                        //    {
+                        //        throw new System.Exception("This ChildQueue is Empty but latest task didn't give back the locker.Value | Input.GetKeyDown(KeyCode.J)");
+                        //    }
+                        //}
+                        //else
+                        //{   }
                     }
                     break;
+                    
+                case ControllerLocker.ControllerLockerState.OnlyInteract_InChain:
+                    if (Input.GetKey(KeyCode.J))
+                    {
+                        //if (_mainCharacterDominator.isExecuting == false)
+                        //{
+                        //    ref Unit_Mk004 node = ref _mainCharacterDominator.GetTaskChainNode();
+                        //    if (node.Contents.Length == 0)
+                        //    {
+                        //        throw new System.NotImplementedException();
+                        //    }
+                        //    else
+                        //    {
+                        //        if (node.Style == TextStyle.plain)
+                        //        {
+                        //            _mainCharacterDominator.ExecuteTask_Mk002(persistentObjectManager.paserTranslator.Translate(node));
+                        //            node = persistentObjectManager.parserUnitModifier.Modify(node);
+                        //        }
+                        //        else
+                        //        {
+                        //            throw new System.NotImplementedException();
+                        //        }
+                        //    }
+                        //}
+                        //else
+                        //{   }
+                    }
+                    break;
+
+
                 case ControllerLocker.ControllerLockerState.OnlyNum:
                     if (Input.GetKeyDown(KeyCode.Alpha1) && locker.numLimit >= 0)
                     {

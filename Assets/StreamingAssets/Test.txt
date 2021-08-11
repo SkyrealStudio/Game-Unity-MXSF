@@ -13,7 +13,8 @@ $3$ [TimTNT]
 
 $4$ [Skyreal]
 :I'm all right.// (-.-)
-#0#
+#0#//看，这是神奇的剧本
+//建议改成：《剧本语言》（）
 
 $5$ [Skyreal]
 :Well, what's that?// ?(O.O)

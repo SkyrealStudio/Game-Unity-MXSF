@@ -7,7 +7,7 @@ namespace Interface.Task
 {
     public interface IBaseTask
     {
-        Task<bool> Execute();
+        Task<bool> ExecuteAsync();
     }
 
     public interface IVariableTask : IBaseTask

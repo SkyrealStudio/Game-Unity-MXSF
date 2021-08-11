@@ -136,7 +136,7 @@ namespace Scripts
         {
             if (allowance)
             {
-                taskQueue.Dequeue().Execute();
+                taskQueue.Dequeue().ExecuteAsync();
                 return true;
             }
             else

@@ -77,6 +77,7 @@ namespace ScriptReader
         {
             try
             {
+                Units.Clear();
                 CrackString(File.ReadAllText(Application.streamingAssetsPath + "\\" + scriptFilePath, Encoding.UTF8));
                 return true;
             }

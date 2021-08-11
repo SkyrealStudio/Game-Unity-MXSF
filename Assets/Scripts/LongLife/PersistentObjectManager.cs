@@ -21,7 +21,7 @@ public class PersistentObjectManager : MonoBehaviour,ITickRecorder
     
     public GameProperties gameProperties;
 
-    public IParserUnitToTaskInterface paserTranslator;
+    public IParserUnitToTaskInterface parserTranslator;
     public IParserUnitModifier parserUnitModifier;
     
     //public TextBox textBox;
@@ -35,7 +35,7 @@ public class PersistentObjectManager : MonoBehaviour,ITickRecorder
     private void Awake()
     {
         parserUnitModifier = new ChainUnitModifier();
-        paserTranslator = new ParserUnitToTaskTranslator(this);
+        parserTranslator = new ParserUnitToTaskTranslator(this);
         DontDestroyOnLoad(gameObject);
     }
 

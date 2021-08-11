@@ -25,7 +25,7 @@ namespace Scripts
     class CharacterInteracter003 : MonoBehaviour
     {
         [SerializeField]
-        private ulong[] MyIndexs;
+        private int[] MyIndexs;
 
         private List<int> tickID_list = new List<int>();
 
@@ -62,11 +62,11 @@ namespace Scripts
                 if (feedCheck.status == FeedCheck.Status.neverInteracted)
                 {
                     
-                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[0])));
+                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[0]) ));
                 }
                 else if (feedCheck.status == FeedCheck.Status.Talked001)
                 {
-                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[1])));
+                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[1]) ));
                 }
                 else
                 {
@@ -101,7 +101,7 @@ namespace Scripts
         private void Awake()
         {
             tickRecorder = persistentObjectManager;
-            taskEntranceStruct = targetDominantor;
+            parserUnitCarrier = targetDominantor;
         }
     }
 }

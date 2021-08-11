@@ -5,6 +5,7 @@ using UnityEngine;
 using Interface.Task;
 using Interface.Task.Chain;
 using Interface.TextParser.ReturnUnit;
+using Interface.TextPhraser;
 
 namespace Scripts
 {
@@ -72,15 +73,15 @@ namespace Scripts
 
         private MainCharacterDominator _mainCharacterDominator;
         private ITaskStructCarrier taskStructCarrier;
-        private ITaskChainNodeCarrier taskNodeCarrier;
 
-        private ITaskExecuter taskExecuter;
+        private IParserUnitCarrier parserUnitCarrier;
+        private ITaskChainNodeCarrier chainNodeCarrier_NowRunning;
+
+
+        //private ITaskExecuter_Mk001 taskExecuter;
+        private ITaskExecuter_Mk002 taskExecuter;
         private IVariableTaskExecuter001 variableTaskExecuter001;
-
-        private ITaskExecuter taskExecuter_Translator;
-
         
-
         void Start()
         {
             locker = new ControllerLocker();
@@ -88,14 +89,29 @@ namespace Scripts
 
             _mainCharacterDominator = gameObject.GetComponent<MainCharacterDominator>();
 
+            parserUnitCarrier = _mainCharacterDominator;
+            chainNodeCarrier_NowRunning = _mainCharacterDominator;
+
             taskStructCarrier = _mainCharacterDominator;
-            taskExecuter = _mainCharacterDominator;
+            //taskExecuter = _mainCharacterDominator;
             variableTaskExecuter001 = _mainCharacterDominator;
         }
 
         private void Normal_PlayerInteract()
         {
-            Unit_Mk004 t = _mainCharacterDominator.GetTaskEntranceStruct().PopTop();
+            if (!_mainCharacterDominator.isExecuting) return;
+            if (parserUnitCarrier.GetTaskEntranceStruct().Count == 0) return;
+
+            Unit_Mk004 unit = chainNodeCarrier_NowRunning.GetTaskChainNode();
+
+            unit = parserUnitCarrier.GetTaskEntranceStruct().Dequeue().data;
+
+            taskExecuter.ExecuteTaskAsync(persistentObjectManager.parserTranslator.Translate(unit));
+
+            unit = persistentObjectManager.parserUnitModifier.Modify(unit);
+
+            //qwq我也没想到会写这么复杂啊啊啊啊啊啊啊
+            //20210811 TODO:求ycMia至少对接一下剧本解析
         }
 
         private void Entrance_PlayerInteract()

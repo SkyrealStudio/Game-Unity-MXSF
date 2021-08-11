@@ -9,13 +9,13 @@ using Interface.Task.Chain;
 using Interface.TextParser.ReturnUnit;
 using Interface.TextPhraser;
 
-public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExecuter, IVariableTaskExecuter001, ITaskChainNodeCarrier , IParserUnitCarrier
+public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier, ITaskExecuter_Mk001, IVariableTaskExecuter001, ITaskChainNodeCarrier, IParserUnitCarrier, ITaskExecuter_Mk002
 {
     private MyStruct1<TaskQueueWithTickCount<IBaseTask>> taskStruct;
 
     private MyStruct1<DataWithTickCount<Unit_Mk004>> taskEntranceUnit;
-
-    private Unit_Mk004 taskChainNode;
+    
+    private Unit_Mk004 taskChainNode = new Unit_Mk004();
 
     public bool isExecutingStatus = false;
     public bool isExecuting;
@@ -53,8 +53,8 @@ public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExe
         isExecuting = false;
         taskStruct = new MyStruct1<TaskQueueWithTickCount<IBaseTask>>();
     }
-    
-    public async void ExecuteTask_Mk002(IBaseTask task)
+
+    async void ITaskExecuter_Mk002.ExecuteTaskAsync(IBaseTask task)
     {
         if (isExecuting) return;
         isExecuting = true;
@@ -82,5 +82,4 @@ public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExe
         isExecuting = false;
     }
 
-    
 }

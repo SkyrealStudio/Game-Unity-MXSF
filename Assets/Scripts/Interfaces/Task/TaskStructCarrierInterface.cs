@@ -15,9 +15,10 @@ namespace Interface.Task
         MyStruct1<TaskQueueWithTickCount<IBaseTask>> GetTaskStruct();
     }
 
-    public interface ITaskEntranceStruct
-    {
-        MyStruct1<DataWithTickCount<IBaseTask>> GetTaskEntranceStruct();
-    }
+    [Obsolete("ycMia 20210811")]
+    //public interface ITaskEntranceStruct
+    //{
+    //    MyStruct1<DataWithTickCount<IBaseTask>> GetTaskEntranceStruct();
+    //}
 }
 

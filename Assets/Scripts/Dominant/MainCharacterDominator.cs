@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using Interface.Task;
 using Interface.Task.Chain;
 using Interface.TextParser.ReturnUnit;
+using Interface.TextPhraser;
 
-public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExecuter, IVariableTaskExecuter001, ITaskEntranceStruct, ITaskChainNodeCarrier
+public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExecuter, IVariableTaskExecuter001, ITaskChainNodeCarrier , IParserUnitCarrier
 {
     private MyStruct1<TaskQueueWithTickCount<IBaseTask>> taskStruct;
-    private MyStruct1<DataWithTickCount<IBaseTask>> taskEntranceStruct;
+
+    private MyStruct1<DataWithTickCount<Unit_Mk004>> taskEntranceUnit;
 
     private Unit_Mk004 taskChainNode;
 
@@ -23,23 +25,21 @@ public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExe
         taskChainNode = u;
     }
 
-    public Unit_Mk004 GetTaskChainNode()
+    MyStruct1<DataWithTickCount<Unit_Mk004>> IParserUnitCarrier.GetTaskEntranceStruct()
     {
-        return taskChainNode;
+        return taskEntranceUnit;
     }
 
-    public MyStruct1<DataWithTickCount<IBaseTask>> GetTaskEntranceStruct()
+    public ref Unit_Mk004 GetTaskChainNode()
     {
-        return taskEntranceStruct;
+        return ref taskChainNode;
     }
+    
     public MyStruct1<TaskQueueWithTickCount<IBaseTask>> GetTaskStruct()
     {
         return taskStruct;
     }
-    //public IBaseTask GetTakStructTop_Tail()
-    //{
-    //    throw new System.NotImplementedException();
-    //}
+
     public TaskQueueWithTickCount<IBaseTask> GetTaskStructTop()
     {
         if (taskStruct.Count > 0)
@@ -54,23 +54,33 @@ public class MainCharacterDominator : MonoBehaviour, ITaskStructCarrier,ITaskExe
         taskStruct = new MyStruct1<TaskQueueWithTickCount<IBaseTask>>();
     }
     
-    public async void ExecuteTask()
+    public async void ExecuteTask_Mk002(IBaseTask task)
     {
         if (isExecuting) return;
         isExecuting = true;
-        await this.GetTaskStruct().Top().Dequeue().Execute();
+        await task.ExecuteAsync();
+        isExecuting = false;
+    }
+
+    public async void ExecuteTask()
+    {
+        throw new System.Exception("This Method is not allowed to be Invoked");
+        if (isExecuting) return;
+        isExecuting = true;
+        await this.GetTaskStruct().Top().Dequeue().ExecuteAsync();
         isExecuting = false;
     }
 
     public async void ExecuteVariableTask(int n)
     {
+        throw new System.Exception("This Method is not allowed to be Invoked");
         if (isExecuting || !Application.isPlaying) return;
         isExecuting = true;
         IVariableTask variableTask = this.GetTaskStruct().Top().Dequeue() as IVariableTask;
         variableTask.Select(n);
-        await variableTask.Execute();
+        await variableTask.ExecuteAsync();
         isExecuting = false;
     }
 
-   
+    
 }

@@ -9,22 +9,37 @@ using Interface.Task;
 
 namespace Translator
 {
-    public class ParserUnitToTaskTranslator : ParserUnitToTaskInterface
+    public class ParserUnitToTaskTranslator : IParserUnitToTaskInterface
     {
+        public ParserUnitToTaskTranslator(PersistentObjectManager pom)
+        {
+            this.pom = pom;
+        }
+
+        private PersistentObjectManager pom;
+        
         public IBaseTask Translate(Unit_Mk004 unit)
         {
             switch(unit.Style)
             {
                 case TextStyle.plain:
-
-                    break;
+                    return new MyTasks.TextBoxTextWork_002(pom.DefaultUIShowerSetting, _Refine(unit,0),true);
                 case TextStyle.eventTrigger:
+                    throw new NotImplementedException();
                     break;
                 case TextStyle.selective:
+                    throw new NotImplementedException();
                     break;
                 default:
+                    throw new NotImplementedException();
                     break;
             }
         }
+
+        private string _Refine(Unit_Mk004 unit,int contentIndex)
+        {
+            return unit.Speaker + ": " + unit.Contents[contentIndex];
+        }
+
     }
 }

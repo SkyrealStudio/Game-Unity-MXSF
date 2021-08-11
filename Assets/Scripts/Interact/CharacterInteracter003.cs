@@ -18,6 +18,7 @@ using Interface.TextParser;
 using Interface.TextParser.ReturnUnit;
 
 using MyTasks;
+using Interface.TextPhraser;
 
 namespace Scripts
 {
@@ -30,7 +31,8 @@ namespace Scripts
 
         public PersistentObjectManager persistentObjectManager;
         public MainCharacterDominator targetDominantor;
-        public ITaskEntranceStruct taskEntranceStruct;
+        public IParserUnitCarrier parserUnitCarrier;
+        //public ITaskEntranceStruct taskEntranceStruct;
         public ITextParser_Mk004 TextParser;
 
         private class FeedCheck
@@ -55,21 +57,16 @@ namespace Scripts
                 Debug.Log("Entering: " + gameObject.name);
                 int tick = tickRecorder.GetTickCount();
                 tickID_list.Add(tick);
-                MyStruct1<DataWithTickCount<IBaseTask>> dest = taskEntranceStruct.GetTaskEntranceStruct();
+                MyStruct1<DataWithTickCount<Unit_Mk004>> dest = parserUnitCarrier.GetTaskEntranceStruct();
 
                 if (feedCheck.status == FeedCheck.Status.neverInteracted)
                 {
-                    TaskChainEntrance tce = new TaskChainEntrance(persistentObjectManager.currentController.locker,
-                                                                  TextParser.GetUnit(MyIndexs[0]),
-                                                                  targetDominantor);
-                    dest.Push(new DataWithTickCount<IBaseTask>(tick,tce));
+                    
+                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[0])));
                 }
                 else if (feedCheck.status == FeedCheck.Status.Talked001)
                 {
-                    TaskChainEntrance tce = new TaskChainEntrance(persistentObjectManager.currentController.locker,
-                                                                  TextParser.GetUnit(MyIndexs[1]),
-                                                                  targetDominantor);
-                    dest.Push(new DataWithTickCount<IBaseTask>(tick, tce));
+                    dest.Push(new DataWithTickCount<Unit_Mk004>(tick, TextParser.GetUnit(MyIndexs[1])));
                 }
                 else
                 {
@@ -81,9 +78,9 @@ namespace Scripts
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.transform.parent.gameObject == persistentObjectManager.MainCharacterGObj &&
-                taskEntranceStruct.GetTaskEntranceStruct().Count>0)
+                parserUnitCarrier.GetTaskEntranceStruct().Count>0)
             {
-                MyStruct1<DataWithTickCount<IBaseTask>> from = taskEntranceStruct.GetTaskEntranceStruct();
+                MyStruct1<DataWithTickCount<Unit_Mk004>> from = parserUnitCarrier.GetTaskEntranceStruct();
 
                 if (tickID_list.Contains(from.Top().tickCount))
                 {

@@ -330,6 +330,7 @@ GameObject:
   - component: {fileID: 176087319}
   - component: {fileID: 176087318}
   - component: {fileID: 176087321}
+  - component: {fileID: 176087320}
   m_Layer: 0
   m_Name: PersistentObjectManager
   m_TagString: Untagged
@@ -352,7 +353,6 @@ MonoBehaviour:
   currentController: {fileID: 787027200}
   MainCharacterGObj: {fileID: 787027195}
   gameProperties: {fileID: 0}
-  textBox: {fileID: 1819382097}
   tipTextBoxBranch: {fileID: 1819382095}
   cameraExecuter: {fileID: 1738501939}
 --- !u!4 &176087319
@@ -369,6 +369,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &176087320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 176087317}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ba5def770c0d564b830c4f6c88f7fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  persistentObjectManager: {fileID: 176087318}
+  textBox: {fileID: 1819382097}
 --- !u!114 &176087321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,6 +987,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b924c9c20536c20479bd6c8f05957560, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MyIndexs: 
   persistentObjectManager: {fileID: 176087318}
   targetDominantor: {fileID: 787027196}
 --- !u!50 &1323142763
@@ -1458,12 +1473,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f59547ee9b7fff448c58b995fdb8d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  persistentObjectManager: {fileID: 176087318}
-  targetDominantor: {fileID: 787027196}
-  tarCam: {fileID: 1738501937}
-  tipCarrier: {fileID: 1915501655}
-  choiceFormCarrier: {fileID: 1851284341}
-  needFeed: 1
 --- !u!50 &1851284338
 Rigidbody2D:
   serializedVersion: 4

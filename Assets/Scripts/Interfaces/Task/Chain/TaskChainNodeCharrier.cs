@@ -4,7 +4,7 @@ namespace Interface.Task.Chain
 {
     public interface ITaskChainNodeCarrier
     {
-        TextParser.ReturnUnit.Unit_Mk004 GetTaskChainNode();
+        ref TextParser.ReturnUnit.Unit_Mk004 GetTaskChainNode();
         void SetTaskChainNode(TextParser.ReturnUnit.Unit_Mk004 unit);
     }
 }

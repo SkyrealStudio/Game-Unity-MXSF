@@ -69,6 +69,8 @@ namespace AttributeManager
             if (!AttributeDatas[tarChar].Contains(attr))
                 return false;
             AttributeDatas[tarChar].Remove(attr);
+            if (AttributeDatas[tarChar].Count == 0)
+                AttributeDatas.Remove(tarChar);
             Save();
             return true;
         }

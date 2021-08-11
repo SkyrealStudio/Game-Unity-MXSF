@@ -1,0 +1,24 @@
+$1$ [TimTNT]
+:Hello?// !(OvO)
+#2#
+
+$2$ [Skyreal]
+:Yes?
+:Anything?
+#3#
+
+$3$ [TimTNT]
+#Well, just asking...#4#// (=v=)
+#Yes, I've got a question for ya!#5#// !(OvO)
+
+$4$ [Skyreal]
+:I'm all right.// (-.-)
+#0#
+
+$5$ [Skyreal]
+:Well, what's that?// ?(O.O)
+#6#
+
+$6$ [TimTNT]
+:So, how are you?// (<.<)
+#4#

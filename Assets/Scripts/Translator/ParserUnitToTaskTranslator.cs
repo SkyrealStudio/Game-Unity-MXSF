@@ -22,12 +22,12 @@ namespace Translator
         {
             switch(unit.Style)
             {
-                case TextStyle.plain:
+                case TextStyle.Plain:
                     return new MyTasks.TextBoxTextWork_002(pom.DefaultUIShowerSetting, _Refine(unit,0),true);
-                case TextStyle.eventTrigger:
+                case TextStyle.EventTrigger:
                     throw new NotImplementedException();
                     break;
-                case TextStyle.selective:
+                case TextStyle.Selective:
                     throw new NotImplementedException();
                     break;
                 default:

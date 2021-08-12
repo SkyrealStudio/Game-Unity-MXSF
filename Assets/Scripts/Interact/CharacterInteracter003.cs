@@ -25,7 +25,7 @@ namespace Scripts
     class CharacterInteracter003 : MonoBehaviour
     {
         [SerializeField]
-        private ulong[] MyIndexs;
+        private int[] MyIndexs;
 
         private List<int> tickID_list = new List<int>();
 
@@ -101,7 +101,7 @@ namespace Scripts
         private void Awake()
         {
             tickRecorder = persistentObjectManager;
-            taskEntranceStruct = targetDominantor;
+            //taskEntranceStruct = targetDominantor;
         }
     }
 }

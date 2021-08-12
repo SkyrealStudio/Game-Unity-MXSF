@@ -95,7 +95,7 @@ namespace Scripts
 
         private void Normal_PlayerInteract()
         {
-            Unit_Mk004 t = _mainCharacterDominator.GetTaskEntranceStruct().PopTop();
+            //Unit_Mk004 t = _mainCharacterDominator.GetTaskEntranceStruct().PopTop();
         }
 
         private void Entrance_PlayerInteract()
